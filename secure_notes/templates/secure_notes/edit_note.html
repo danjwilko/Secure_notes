@@ -1,0 +1,14 @@
+{% extends "secure_notes/base.html" %}
+
+{% block content %}
+
+<p><a href="{% url 'secure_notes:note_detail' note.id %}">Back to note details</a></p>
+<p>Edit note.</p>
+
+<form action="{% url 'secure_notes:edit_note' note.id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_div }}
+    <button name="submit">Save Changes</button>
+</form>
+
+{% endblock content %}

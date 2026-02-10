@@ -1,0 +1,11 @@
+{% extends "secure_notes/base.html" %}
+
+{% block content %}
+    <p>Add a new note.</p>
+
+    <form action="{% url 'secure_notes:create_note' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <button name="submit">Add Note</button>
+    </form>
+{% endblock content %}
