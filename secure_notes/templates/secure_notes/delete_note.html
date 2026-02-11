@@ -1,0 +1,26 @@
+{% extends "secure_notes/base.html" %}
+
+{% block page_header %}
+    <h2>Delete Note</h2>
+{% endblock page_header %}
+
+{% block content %}
+
+<p class="card-text alert alert-warning">Are you sure you want to delete the following note? This action cannot be undone.</p>
+
+<div class="card mb-3>">
+<h4 class="card-header">{{ note.title }}</h4>
+    <div class="card-body">
+        <p class="card-text">{{ note.content|linebreaksbr }}</p>
+        <p class="card-text"><small class="text-muted">Created at: {{ note.created_at|date:"F j, Y, g:i a" }}</small></p>
+        <p class="card-text"><small class="text-muted">Last updated: {{ note.updated_at|date:"F j, Y, g:i a" }}</small></p>
+
+        <form action="{% url 'secure_notes:delete_note' note.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" name="confirm" class="btn btn-danger">Yes, delete this note</button>
+            <a href="{% url 'secure_notes:note_detail' note.id %}" class="btn btn-secondary">No, keep this note</a>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

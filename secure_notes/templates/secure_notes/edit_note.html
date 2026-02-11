@@ -1,14 +1,30 @@
 {% extends "secure_notes/base.html" %}
 
+{% block page_header %}
+    <h2>Edit Note "{{ note.title }}"</h2>
+{% endblock page_header %}
+
 {% block content %}
 
-<p><a href="{% url 'secure_notes:note_detail' note.id %}">Back to note details</a></p>
-<p>Edit note.</p>
+<p class="card-text">Edit the content of your note below. Save when your done.</p>
 
-<form action="{% url 'secure_notes:edit_note' note.id %}" method="post">
-    {% csrf_token %}
-    {{ form.as_div }}
-    <button name="submit">Save Changes</button>
-</form>
+<div class="card mb-3 p-4 bg-light rounded">
+    <form action="{% url 'secure_notes:edit_note' note.id %}" method="post">
+        {% csrf_token %}
+
+        {% if form.errors %}
+            <div class="alert alert-warning" role="alert">
+                Please correct the errors below.
+            </div>
+        {% endif %}
+
+        {{ form.as_div }}
+
+        <div class="mt-3 d-flex gap-2">
+        <button type="submit" name="submit" class="btn btn-primary">Save Changes</button>
+        <a href="{% url 'secure_notes:note_detail' note.id %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
 
 {% endblock content %}

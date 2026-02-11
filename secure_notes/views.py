@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 from .models import Note
@@ -6,6 +6,8 @@ from .forms import NoteForm
 
 def index(request):
     """View function for the home page of the secure notes app."""
+    if request.user.is_authenticated:
+        return redirect('secure_notes:notes')
     return render(request, 'secure_notes/index.html')
 
 @login_required
@@ -16,14 +18,13 @@ def notes(request):
     context = {
         'notes': notes
     }
-    
     return render(request, 'secure_notes/notes.html', context)
 
 @login_required
 def note_detail(request, note_id):
     """View function to display the details of a specific note."""
     # Fetch the note by ID and ensure it belongs to the current user.
-    note = Note.objects.get(id=note_id, owner=request.user)
+    note = get_object_or_404(Note, id=note_id, owner=request.user)
     context = {
         'note': note
     }
@@ -56,7 +57,7 @@ def create_note(request):
 def edit_note(request, note_id):
     """View function to handle editing an existing note."""
     # Fetch the note by ID and ensure it belongs to the current user.
-    note = Note.objects.get(id=note_id, owner=request.user)
+    note = get_object_or_404(Note, id=note_id, owner=request.user)
     
     if request.method != 'POST':
         # Pre-fill the form with the existing note data.
@@ -66,7 +67,7 @@ def edit_note(request, note_id):
         form = NoteForm(instance=note, data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect('secure_notes:notes')
+            return redirect('secure_notes:note_detail', note_id=note.id)
     
     context = {
         'form': form,
@@ -74,3 +75,18 @@ def edit_note(request, note_id):
     }
     
     return render(request, 'secure_notes/edit_note.html', context)
+
+def delete_note(request, note_id):
+    """View function to handle deleting a note."""
+    # Fetch the note by ID and ensure it belongs to the current user.
+    note = get_object_or_404(Note, id=note_id, owner=request.user)
+    
+    if request.method == 'POST':
+        note.delete()
+        return redirect('secure_notes:notes')
+    
+    context = {
+        'note': note
+    }
+    
+    return render(request, 'secure_notes/delete_note.html', context)

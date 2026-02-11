@@ -1,22 +1,71 @@
-<p>
-    <!-- Base template for secure notes application -->
-    <a href="{% url 'secure_notes:index' %}">Secure Notes</a> -
-    <a href="{% url 'secure_notes:notes' %}">Notes</a> - 
-    {% if user.is_authenticated %}
-        Hello {{ user.username }}.
-    {% else %}
-        <a href="{% url 'accounts:register' %}">Register</a> -
-        <a href="{% url 'accounts:login' %}">Login</a>
-    {% endif %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'secure_notes/css/styles.css' %}">
+    <title>Secure Notes</title>
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    
 
-</p>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-light bg-light mb-4 border">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'secure_notes:index' %}">
+                Secure Notes
+            </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
+        aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-{% block content %}{% endblock content %}
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'secure_notes:notes' %}">Notes</a>
+                </li>
+            </ul> <!-- End of left-aligned nav items -->
 
-{% if user.is_authenticated %}
-<hr/>
-<form action="{% url 'accounts:logout' %}" method="post">
-    {% csrf_token %}
-    <button name="submit">Logout</button>
-</form>
-{% endif %} 
+            <!-- Account related links -->
+             <ul class="navbar-nav ms-auto mb-2 mb-md-0">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="navbar-text">Hello {{ user.username }}.</span>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
+                    </li>
+                {% endif %}
+            </ul> <!-- End of account-related nav items -->
+
+            {% if user.is_authenticated %}
+            <form action="{% url 'accounts:logout' %}" method="post" class="d-flex ms-3">
+                {% csrf_token %}
+                <button name="submit" class="btn btn-outline-secondary">Logout</button>
+            </form>
+            {% endif %}
+
+
+        </div> <!-- End of collapsible content -->
+    </div> <!-- End of container -->
+</nav> <!-- End of navbar -->
+
+<main class="container">
+    <div class="pb-2 mb-2 border-bottom">
+        {% block page_header %}{% endblock page_header %}
+    </div>
+    <div>
+        {% block content %}{% endblock content %}
+    </div>
+</main>
+</body>
+</html>

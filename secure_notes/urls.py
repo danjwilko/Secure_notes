@@ -18,5 +18,5 @@ urlpatterns = [
     # Update an existing note.
     path('edit_note/<int:note_id>/', views.edit_note, name='edit_note'),
     # Delete a note.
-    #path('notes/<int:note_id>/delete/', views.note_delete, name='note_delete'),
+    path('delete_note/<int:note_id>/', views.delete_note, name='delete_note'),
     ]

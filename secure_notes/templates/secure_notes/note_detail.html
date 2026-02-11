@@ -1,13 +1,21 @@
 {% extends "secure_notes/base.html" %}
 
+{% block page_header %}
+    <h2>Note Details</h2>
+{% endblock page_header %}
+
 {% block content %}
 
-<p>Note detail page.</p>
-<p>Title: {{ note.title }}</p>
-<p>Entry: {{ note.content }}</p>
-<p>Created at: {{ note.created_at }}</p>
-<p>Last updated: {{ note.updated_at }}</p>
-<p><a href="{% url 'secure_notes:edit_note' note.id %}">Edit this note</a></p>
-<p><a href="{% url 'secure_notes:notes' %}">Back to notes</a></p>
+<div class="card mb-3">
+    <h4 class="card-header">{{ note.title }}</h4>
+    <div class="card-body">
+        <p class="card-text">{{ note.content|linebreaksbr }}</p>
+        <p class="card-text"><small class="text-muted">Created at: {{ note.created_at|date:"F j, Y, g:i a" }}</small></p>
+        <p class="card-text"><small class="text-muted">Last updated: {{ note.updated_at|date:"F j, Y, g:i a" }}</small></p>
+        <a href="{% url 'secure_notes:edit_note' note.id %}" class="btn btn-primary">Edit this note</a>
+        <a href="{% url 'secure_notes:delete_note' note.id %}" class="btn btn-danger">Delete this note</a>
+        <a href="{% url 'secure_notes:notes' %}" class="btn btn-secondary">Back to notes</a>
+    </div>
+</div>
 
 {% endblock content %}

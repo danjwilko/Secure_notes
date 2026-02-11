@@ -10,9 +10,11 @@ class NoteForm(forms.ModelForm):
         fields = ['title', 'content']
         labels = {
             'title': 'Note Title',
-            'content': '',
+            'content': 'Note Text',
         }
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'content': forms.Textarea(attrs={'rows': 20}),
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 20}),
         }
