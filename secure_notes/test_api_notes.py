@@ -5,12 +5,14 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 @pytest.mark.django_db
+# Test that unauthenticated users cannot access the notes API.
 def test_authentication_required_for_notes_api():
     client = APIClient()
     response = client.get('/api/notes/')
     assert response.status_code in (403, 401)  # Should be forbidden for unauthenticated users
 
 @pytest.mark.django_db
+# Test that authenticated users can access the notes API and get an empty list if they have no notes.
 def test_authentication_for_logged_in_user():
     User.objects.create_user(username='testuser', password='testpass')
     client = APIClient()
@@ -21,6 +23,7 @@ def test_authentication_for_logged_in_user():
     assert response.data == []  # Should return an empty list for a new user with no notes
 
 @pytest.mark.django_db
+# Test that an authenticated user can create a note via the API and that the note is created successfully.
 def test_create_note_api():
     # Create a test user
     User.objects.create_user(username='testuser', password='testpass')
@@ -37,6 +40,7 @@ def test_create_note_api():
     
     
 @pytest.mark.django_db
+# Test that a user cannot access notes created by another user via the API.
 def test_user_cannot_access_others_notes():
     # Create two users
     User.objects.create_user(username='user_a', password='pass1')
@@ -61,6 +65,7 @@ def test_user_cannot_access_others_notes():
     assert response.status_code == 404  # Should return 404 for non-existent note for user_b.
     
 @pytest.mark.django_db
+# Test that a user cannot create two notes with the same title via the API, and that the appropriate error is returned.
 def test_duplicate_title_for_same_user():
     # Create a test user and a note with a specific title - api response.
     User.objects.create_user(username='testuser', password='testpass')
@@ -72,5 +77,5 @@ def test_duplicate_title_for_same_user():
     assert response.status_code == 201  # First note should be created successfully
     
     response = client.post('/api/notes/', {'title': 'Duplicate Title', 'content': 'Second note content.'}, format='json')
-    assert response.status_code == 400  # Should return a bad request due to unique constraint
+    assert response.status_code == 400  # Should return 400 due to unique constraint
     assert 'title' in response.data  # Should indicate the error is with the title field
