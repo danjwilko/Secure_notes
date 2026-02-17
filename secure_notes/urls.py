@@ -1,6 +1,6 @@
 """Defines URL patterns for the secure_notes app."""
 
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
@@ -19,4 +19,5 @@ urlpatterns = [
     path('edit_note/<int:note_id>/', views.edit_note, name='edit_note'),
     # Delete a note.
     path('delete_note/<int:note_id>/', views.delete_note, name='delete_note'),
+    
     ]

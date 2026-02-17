@@ -4,6 +4,14 @@ from django.contrib.auth.decorators import login_required
 from .models import Note
 from .forms import NoteForm
 
+def user_notes_qs(request):
+    """Helper function to get the queryset of notes belonging to the logged-in user."""
+    return Note.objects.filter(owner=request.user)
+
+def get_user_note_or_404(request, note_id):
+    """Helper function to get a note by ID and ensure it belongs to the user."""
+    return get_object_or_404(user_notes_qs(request), id=note_id)
+
 def index(request):
     """View function for the home page of the secure notes app."""
     if request.user.is_authenticated:
@@ -14,7 +22,7 @@ def index(request):
 def notes(request):
     """View function to display the list of notes for the logged-in user."""
     # Fetch notes for the current user, ordered by last updated time descending.
-    notes = Note.objects.filter(owner=request.user).order_by('-updated_at')
+    notes = user_notes_qs(request).order_by('-updated_at')
     context = {
         'notes': notes
     }
@@ -24,7 +32,7 @@ def notes(request):
 def note_detail(request, note_id):
     """View function to display the details of a specific note."""
     # Fetch the note by ID and ensure it belongs to the current user.
-    note = get_object_or_404(Note, id=note_id, owner=request.user)
+    note = get_user_note_or_404(request, note_id)
     context = {
         'note': note
     }
@@ -57,7 +65,7 @@ def create_note(request):
 def edit_note(request, note_id):
     """View function to handle editing an existing note."""
     # Fetch the note by ID and ensure it belongs to the current user.
-    note = get_object_or_404(Note, id=note_id, owner=request.user)
+    note = get_user_note_or_404(request, note_id)
     
     if request.method != 'POST':
         # Pre-fill the form with the existing note data.
@@ -76,10 +84,11 @@ def edit_note(request, note_id):
     
     return render(request, 'secure_notes/edit_note.html', context)
 
+@login_required
 def delete_note(request, note_id):
     """View function to handle deleting a note."""
     # Fetch the note by ID and ensure it belongs to the current user.
-    note = get_object_or_404(Note, id=note_id, owner=request.user)
+    note = get_user_note_or_404(request, note_id)
     
     if request.method == 'POST':
         note.delete()

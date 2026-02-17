@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 
@@ -14,11 +14,11 @@ def register(request):
             new_user = form.save()
             # Log the user in and redirect to the home page.
             login(request, new_user)
-            return render(request, 'secure_notes/index.html')
+            return redirect('secure_notes:index')
     
     # Display a blank or invalid form.
     context = {
         'form': form
     }
     
-    return render(request, 'accounts/register.html', context)
+    return redirect('accounts:register', context=context)
