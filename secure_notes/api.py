@@ -1,4 +1,5 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from .serializers import NoteSerializer
 from .models import Note
     
@@ -6,7 +7,7 @@ class NoteViewSet(viewsets.ModelViewSet):
     """ViewSet for the Note model."""
         
     serializer_class = NoteSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         """Return notes for the current authenticated user only."""
