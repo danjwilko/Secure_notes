@@ -56,7 +56,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated', 
+        # Note: Endpoint remains private by default, requiring authentication for all API views unless explicitly overridden with different permissions.
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
@@ -65,8 +66,8 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.AnonRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'user': 100/day,  # Limit authenticated users to 100 requests per day
-        'anon': 10/day,   # Limit unauthenticated users to 10 requests per day
+        'user': '100/day',  # Limit authenticated users to 100 requests per day
+        'anon': '10/day',   # Limit unauthenticated users to 10 requests per day
         'login': '5/minute'
     },
 }
@@ -76,7 +77,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
     'ROTATE_REFRESH_TOKENS': True, # Note: Rotate refresh tokens on each use for better security.(prevents reuse of refresh tokens if they are stolen).
-    'BLACKLIST_AFTER_ROTATION': True, # Note:(To-do) Blacklist old refresh tokens after rotation to prevent reuse. - To do - Add the blacklist app and configure it to store blacklisted tokens in the database.
+    'BLACKLIST_AFTER_ROTATION': True, 
 }
 
 

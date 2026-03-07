@@ -62,7 +62,7 @@ The project was built as a learning exercise to explore secure-by-design backend
 
 ## API Usage
 
-The API allows programattic access to the notes using JWT authentication.
+The API allows programmatic access to the notes using JWT authentication.
 
 Example endpoints:
 
@@ -79,11 +79,14 @@ Run tests with:
 
 ## Documentation
 
-Additional design documentation is available in the '/docs' directory
+API and design documentation is in progress and will be published to the /docs directory on completion.
 
 ## Roadmap
 
-To be finalised.
+- Add API throttling to limit request on authentication endpoints.
+- Audit logging for note operations.
+- Migrate database to PostgreSQL for production environment.
+- Expand test coverage to include edge cases and complete coverage.
 
 ## Learning Goals
 
