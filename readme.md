@@ -6,7 +6,7 @@ A secure Django-based notes application with user scoped data, REST API access a
 
 Secure Notes is a Django web application that allows authenticated users to create and manage personal notes.
 
-The project was built as a learning exercise to explore secure-by-design backend development using Django and Django REST Framework, focusing on authentication, access control, and API design.
+The project was built as a learning exercise to explore secure-by-design backend development using Django and the Django REST Framework, focusing on authentication, access control, and API design.
 
 ## Features
 
@@ -74,7 +74,8 @@ Example endpoints:
 
 Tests are implemented using pytest and Django's test database.
 
-Run tests with: pytest
+Run tests with: 
+    pytest
 
 ## Documentation
 
