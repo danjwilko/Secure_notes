@@ -34,7 +34,7 @@ The project was built as a learning exercise to explore secure-by-design backend
 
 - SQLite (development)
 
-### Testing
+### Tests
 
 - Pytest
 - Django ORM test database
@@ -49,16 +49,16 @@ The project was built as a learning exercise to explore secure-by-design backend
 
 ## Running the project locally
 
-git clone <repo>
-cd secure-notes
+    git clone <repo>
+    cd secure-notes
 
-python -m venv venv
-source venv/bin/activate
+    python -m venv venv
+    source venv/bin/activate
 
-pip install -r requirements.txt
+    pip install -r requirements.txt
 
-python manage.py migrate
-python manage.py runserver
+    python manage.py migrate
+    python manage.py runserver
 
 ## API Usage
 
@@ -66,9 +66,9 @@ The API allows programattic access to the notes using JWT authentication.
 
 Example endpoints:
 
-POST /api/token/
-GET /api/notes/
-POST /api/notes/
+    POST /api/token/
+    GET /api/notes/
+    POST /api/notes/
 
 ## Testing
 
