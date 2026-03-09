@@ -7,17 +7,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('secure_notes', '0001_initial'),
+        ("secure_notes", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='note',
+            name="note",
             unique_together=set(),
         ),
         migrations.AddConstraint(
-            model_name='note',
-            constraint=models.UniqueConstraint(fields=('owner', 'title'), name='unique_note_title_per_user'),
+            model_name="note",
+            constraint=models.UniqueConstraint(
+                fields=("owner", "title"), name="unique_note_title_per_user"
+            ),
         ),
     ]

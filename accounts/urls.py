@@ -1,12 +1,13 @@
 """Defines the URL patterns for the accounts app."""
 
-from . import views
-from django.urls import path, include
+from django.urls import include, path
 
-app_name = 'accounts'
+from . import views
+
+app_name = "accounts"
 urlpatterns = [
     # Include default auth urls.
-    path('', include('django.contrib.auth.urls')),
+    path("", include("django.contrib.auth.urls")),
     # Registaration page.
-    path('register/', views.register, name='register'),
+    path("register/", views.register, name="register"),
 ]

@@ -1,49 +1,50 @@
-
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Note
 from .forms import NoteForm
+from .models import Note
+
 
 def user_notes_qs(request):
     """Helper function to get the queryset of notes belonging to the logged-in user."""
     return Note.objects.filter(owner=request.user)
 
+
 def get_user_note_or_404(request, note_id):
     """Helper function to get a note by ID and ensure it belongs to the user."""
     return get_object_or_404(user_notes_qs(request), id=note_id)
 
+
 def index(request):
     """View function for the home page of the secure notes app."""
     if request.user.is_authenticated:
-        return redirect('secure_notes:notes')
-    return render(request, 'secure_notes/index.html')
+        return redirect("secure_notes:notes")
+    return render(request, "secure_notes/index.html")
+
 
 @login_required
 def notes(request):
     """View function to display the list of notes for the logged-in user."""
     # Fetch notes for the current user, ordered by last updated time descending.
-    notes = user_notes_qs(request).order_by('-updated_at')
-    context = {
-        'notes': notes
-    }
-    return render(request, 'secure_notes/notes.html', context)
+    notes = user_notes_qs(request).order_by("-updated_at")
+    context = {"notes": notes}
+    return render(request, "secure_notes/notes.html", context)
+
 
 @login_required
 def note_detail(request, note_id):
     """View function to display the details of a specific note."""
     # Fetch the note by ID and ensure it belongs to the current user.
     note = get_user_note_or_404(request, note_id)
-    context = {
-        'note': note
-    }
-    
-    return render(request, 'secure_notes/note_detail.html', context)
+    context = {"note": note}
+
+    return render(request, "secure_notes/note_detail.html", context)
+
 
 @login_required
 def create_note(request):
     """View function to handle the creation of a new note."""
-    if request.method != 'POST':
+    if request.method != "POST":
         form = NoteForm()
     else:
         # Process the submitted form data.
@@ -55,20 +56,19 @@ def create_note(request):
             new_note.owner = request.user
             # Save the note to the database.
             new_note.save()
-            return redirect('secure_notes:notes')
+            return redirect("secure_notes:notes")
     # Display a blank form for creating a new note.
-    context = {
-        'form': form
-    }
-    return render(request, 'secure_notes/create_note.html', context)
+    context = {"form": form}
+    return render(request, "secure_notes/create_note.html", context)
+
 
 @login_required
 def edit_note(request, note_id):
     """View function to handle editing an existing note."""
     # Fetch the note by ID and ensure it belongs to the current user.
     note = get_user_note_or_404(request, note_id)
-    
-    if request.method != 'POST':
+
+    if request.method != "POST":
         # Pre-fill the form with the existing note data.
         form = NoteForm(instance=note)
     else:
@@ -76,27 +76,23 @@ def edit_note(request, note_id):
         form = NoteForm(instance=note, data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect('secure_notes:note_detail', note_id=note.id)
-    
-    context = {
-        'form': form,
-        'note': note
-    }
-    
-    return render(request, 'secure_notes/edit_note.html', context)
+            return redirect("secure_notes:note_detail", note_id=note.id)
+
+    context = {"form": form, "note": note}
+
+    return render(request, "secure_notes/edit_note.html", context)
+
 
 @login_required
 def delete_note(request, note_id):
     """View function to handle deleting a note."""
     # Fetch the note by ID and ensure it belongs to the current user.
     note = get_user_note_or_404(request, note_id)
-    
-    if request.method == 'POST':
+
+    if request.method == "POST":
         note.delete()
-        return redirect('secure_notes:notes')
-    
-    context = {
-        'note': note
-    }
-    
-    return render(request, 'secure_notes/delete_note.html', context)
+        return redirect("secure_notes:notes")
+
+    context = {"note": note}
+
+    return render(request, "secure_notes/delete_note.html", context)
