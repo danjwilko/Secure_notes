@@ -38,17 +38,12 @@ SECURE_CONTENT_TYPE_NOSNIFF = (
     os.getenv("SECURE_CONTENT_TYPE_NOSNIFF", "True").lower() == "true"
 )
 EMAIL_BACKEND = os.getenv(
-    "EMAIL_BACKEND",
-    "django.core.mail.backends.console.EmailBackend"
+    "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
 )
-
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -61,6 +56,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
     # Default Django apps.
     "django.contrib.admin",
     "django.contrib.auth",
@@ -71,6 +68,8 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
@@ -89,9 +88,9 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "user": "100/day",  # Limit authenticated users to 100 requests per day
-        "anon": "10/day",  # Limit unauthenticated users to 10 requests per day
-        "login": "5/minute",
+        "user": "1000/day",  # Limit authenticated users to 100 requests per day
+        "anon": "20/day",  # Limit unauthenticated users to 20 requests per day
+        "login": "5/minute",  # Limit login attempts to 5 per minute
     },
 }
 
@@ -159,8 +158,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         "NAME": (
-            "django.contrib.auth.password_validation."
-            "MinimumLengthValidator"
+            "django.contrib.auth.password_validation." "MinimumLengthValidator"
         ),
     },
     {
@@ -176,6 +174,17 @@ AUTH_PASSWORD_VALIDATORS = [
         ),
     },
 ]
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Secure Notes API',
+    'DESCRIPTION': 'API documentation for the Secure Notes project.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
+}
+
 
 
 # Internationalization

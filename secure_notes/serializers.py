@@ -9,12 +9,14 @@ class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
         fields = ["id", "title", "content", "created_at", "updated_at"]
-        read_only_fields = ["created_at", "updated_at"]
+        read_only_fields = ["id","created_at", "updated_at"]
 
     def validate_title(self, value):
         request = self.context.get("request")
         if not request or not request.user.is_authenticated:
-            return value  # Skip validation for unauthenticated users (should be handled by permissions)
+            # Skip validation for unauthenticated users
+            # (handled by permissions)
+            return value
 
         # Get all notes with the same title for the current user
         qs = Note.objects.filter(owner=request.user, title=value)

@@ -5,3 +5,58 @@
   -webkit-line-clamp: 2;
   max-height: 3em; /* fallback */
 }
+
+/* Note content styling for markdown rendering */
+.note-content h1,
+.note-content h2,
+.note-content h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.note-content p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.note-content ul,
+.note-content ol {
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+.note-content pre {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+}
+
+.note-content code {
+    background-color: #f1f3f5;
+    padding: 0.15rem 0.35rem;
+    border-radius: 0.25rem;
+    font-family: monospace;
+}
+
+
+.note-content blockquote {
+    border-left: 4px solid #ced4da;
+    padding-left: 1rem;
+    color: #6c757d;
+    margin-left: 0;
+}
+
+
+.note-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+.note-content th,
+.note-content td {
+    border: 1px solid #dee2e6;
+    padding: 0.5rem;
+}

@@ -1,4 +1,5 @@
 {% extends "secure_notes/base.html" %}
+{% load django_bootstrap5 %}
 
 {% block page_header %}
     <h2>Create a New Note</h2>
@@ -9,17 +10,21 @@
 <p class="card-text">Enter the title and content for your new note below. Save when you're done.</p>   
 
 <div class="card mb-3 p-4 bg-light rounded">
-    <form action="{% url 'secure_notes:create_note' %}" method="post">
-        {% csrf_token %}
-    
-        {% if form.errors %}
-            <div class="alert alert-warning" role="alert">
-                Please correct the errors below.
-            </div>
-        {% endif %}
+    <div class="card-body">
+        <form action="{% url 'secure_notes:create_note' %}" method="post">
+            {% csrf_token %}
+        
+            {% if form.errors %}
+                <div class="alert alert-warning" role="alert">
+                    Please correct the errors below.
+                </div>
+            {% endif %}
 
-        {{ form.as_div }}
-        <div class="mt-3 d-flex gap-2">
-        <button type="submit" name="submit" class="btn btn-primary">Add Note</button>
-    </form>
+            {% bootstrap_form form %}
+            {% bootstrap_button button_type="submit" content="Add Note" %}
+            {% bootstrap_button button_type="reset" content="Reset" %}
+            <a href="{% url 'secure_notes:notes' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
 {% endblock content %}

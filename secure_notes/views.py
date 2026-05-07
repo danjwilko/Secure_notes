@@ -3,15 +3,18 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import NoteForm
 from .models import Note
+from .utils import render_markdown
 
 
 def user_notes_qs(request):
-    """Helper function to get the queryset of notes belonging to the logged-in user."""
+    """Helper function to get the queryset of notes belonging to the logged-in
+    user."""
     return Note.objects.filter(owner=request.user)
 
 
 def get_user_note_or_404(request, note_id):
-    """Helper function to get a note by ID and ensure it belongs to the user."""
+    """Helper function to get a note by ID and ensure it belongs to the
+    user."""
     return get_object_or_404(user_notes_qs(request), id=note_id)
 
 
@@ -25,7 +28,7 @@ def index(request):
 @login_required
 def notes(request):
     """View function to display the list of notes for the logged-in user."""
-    # Fetch notes for the current user, ordered by last updated time descending.
+    # Fetch notes for the current user, ordered by last updated time.
     notes = user_notes_qs(request).order_by("-updated_at")
     context = {"notes": notes}
     return render(request, "secure_notes/notes.html", context)
@@ -36,7 +39,10 @@ def note_detail(request, note_id):
     """View function to display the details of a specific note."""
     # Fetch the note by ID and ensure it belongs to the current user.
     note = get_user_note_or_404(request, note_id)
-    context = {"note": note}
+    context = {
+    "note": note,
+    "rendered_content": render_markdown(note.content),
+}
 
     return render(request, "secure_notes/note_detail.html", context)
 

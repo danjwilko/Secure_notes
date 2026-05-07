@@ -9,7 +9,8 @@ class Note(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="notes",
-    )  # Switched to settings.AUTH_USER_MODEL for better compatibility with custom user models
+    )  # Switched to settings.AUTH_USER_MODEL for custom user
+    # model compatibility
     title = models.CharField(max_length=255)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

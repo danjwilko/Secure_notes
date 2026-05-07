@@ -1,13 +1,14 @@
+{% load static %}
+{% load django_bootstrap5 %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static %}
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'secure_notes/css/styles.css' %}">
     <title>Secure Notes</title>
-    {% load django_bootstrap5 %}
     {% bootstrap_css %}
+    <link rel="stylesheet" href="{% static 'secure_notes/css/styles.css' %}">
     {% bootstrap_javascript %}
     
 
