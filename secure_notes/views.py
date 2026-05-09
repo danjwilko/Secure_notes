@@ -40,9 +40,9 @@ def note_detail(request, note_id):
     # Fetch the note by ID and ensure it belongs to the current user.
     note = get_user_note_or_404(request, note_id)
     context = {
-    "note": note,
-    "rendered_content": render_markdown(note.content),
-}
+        "note": note,
+        "rendered_content": render_markdown(note.content),
+    }
 
     return render(request, "secure_notes/note_detail.html", context)
 

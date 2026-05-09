@@ -8,7 +8,7 @@ from .serializers import NoteSerializer
 class NoteViewSet(viewsets.ModelViewSet):
     """ViewSet for the Note model."""
 
-    queryset = Note.objects.all() # This will be overridden by get_queryset
+    queryset = Note.objects.all()  # This will be overridden by get_queryset
     serializer_class = NoteSerializer
     permission_classes = [IsAuthenticated]
 

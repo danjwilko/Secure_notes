@@ -30,6 +30,17 @@ def api_client():
     return make_client
 
 
+# Tests to ensure that invalid tokens cannot access the notes API.
+@pytest.mark.django_db
+def test_invalid_token_cannot_access_notes():
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION="Bearer invalidtoken")
+    response = client.get(NOTES_URL)
+    assert response.status_code in (403, 401)
+
+
+# Basic tests to ensure authentication is required and
+# that authenticated users can access the notes API.
 @pytest.mark.django_db
 def test_authentication_required_for_notes_api():
     client = APIClient()
@@ -48,6 +59,7 @@ def test_authenticated_user_can_access_notes(user, api_client):
     assert response.data["results"] == []
 
 
+# Tests for creating, updating, and deleting notes.
 @pytest.mark.django_db
 def test_create_note_api(user, api_client):
     client = api_client(user)
@@ -61,58 +73,6 @@ def test_create_note_api(user, api_client):
     assert response.status_code == 201
     assert response.data["title"] == "Test Note"
     assert response.data["content"] == "This is a test note."
-
-
-@pytest.mark.django_db
-def test_user_cannot_access_others_notes(user, api_client):
-    client_a = api_client(user)
-
-    response = client_a.post(
-        NOTES_URL,
-        {"title": "User A Note", "content": "This is a note for user A."},
-        format="json",
-    )
-
-    assert response.status_code == 201
-    note_id = response.data["id"]
-
-    user_b = User.objects.create_user(
-        username="testuser2", password="testpass2"
-    )
-    client_b = api_client(user_b)
-
-    response = client_b.get(NOTES_URL)
-
-    assert response.status_code == 200
-    assert response.data["count"] == 0
-    assert response.data["results"] == []
-
-    response = client_b.get(f"{NOTES_URL}{note_id}/")
-    assert (
-        response.status_code == 404
-    )  # Should return 404 for non-existent note for user_b.
-
-
-@pytest.mark.django_db
-def test_duplicate_title_for_same_user(user, api_client):
-    client = api_client(user)
-
-    response = client.post(
-        NOTES_URL,
-        {"title": "Duplicate Title", "content": "First note content."},
-        format="json",
-    )
-
-    assert response.status_code == 201
-
-    response = client.post(
-        "/api/notes/",
-        {"title": "Duplicate Title", "content": "Second note content."},
-        format="json",
-    )
-
-    assert response.status_code == 400
-    assert "title" in response.data
 
 
 @pytest.mark.django_db
@@ -139,29 +99,26 @@ def test_note_update(user, api_client):
 
 
 @pytest.mark.django_db
-def test_user_cannot_update_others_note(user, api_client):
-    client_a = api_client(user)
-    response = client_a.post(
+def test_note_partial_update(user, api_client):
+    client = api_client(user)
+    response = client.post(
         NOTES_URL,
-        {"title": "User A Note", "content": "This is a note for user A."},
+        {"title": "Original Title", "content": "Original content."},
         format="json",
     )
 
     assert response.status_code == 201
     note_id = response.data["id"]
 
-    user_b = User.objects.create_user(
-        username="testuser2", password="testpass2"
-    )
-    client_b = api_client(user_b)
-
-    response = client_b.put(
+    response = client.patch(
         f"{NOTES_URL}{note_id}/",
-        {"title": "Hacked Title", "content": "Hacked content."},
+        {"content": "Partially updated content."},
         format="json",
     )
 
-    assert response.status_code in (404, 403)
+    assert response.status_code == 200
+    assert response.data["title"] == "Original Title"
+    assert response.data["content"] == "Partially updated content."
 
 
 @pytest.mark.django_db
@@ -184,6 +141,7 @@ def test_note_deletion(user, api_client):
     assert response.status_code == 404
 
 
+# Tests for validation errors when creating or updating notes.
 @pytest.mark.django_db
 def test_note_requires_title(user, api_client):
     client = api_client(user)
@@ -206,3 +164,157 @@ def test_note_requires_content(user, api_client):
 
     assert response.status_code == 400
     assert "content" in response.data
+
+
+# Tests to ensure duplicate titles are not allowed for the same user,
+# but different users can have notes with the same title.
+@pytest.mark.django_db
+def test_duplicate_title_for_same_user(user, api_client):
+    client = api_client(user)
+
+    response = client.post(
+        NOTES_URL,
+        {"title": "Duplicate Title", "content": "First note content."},
+        format="json",
+    )
+
+    assert response.status_code == 201
+
+    response = client.post(
+        NOTES_URL,
+        {"title": "Duplicate Title", "content": "Second note content."},
+        format="json",
+    )
+
+    assert response.status_code == 400
+    assert "title" in response.data
+
+
+@pytest.mark.django_db
+def test_same_title_different_users(user, api_client):
+    client_a = api_client(user)
+
+    response = client_a.post(
+        NOTES_URL,
+        {"title": "Shared Title", "content": "User A's note content."},
+        format="json",
+    )
+
+    assert response.status_code == 201
+
+    user_b = User.objects.create_user(
+        username="testuser2", password="testpass2"
+    )
+    client_b = api_client(user_b)
+
+    response = client_b.post(
+        NOTES_URL,
+        {"title": "Shared Title", "content": "User B's note content."},
+        format="json",
+    )
+
+    assert response.status_code == 201
+
+
+# Tests to ensure users cannot access, update, or delete others' notes.
+@pytest.mark.django_db
+def test_notes_list_only_shows_current_users_notes(user, api_client):
+    client_a = api_client(user)
+
+    response = client_a.post(
+        NOTES_URL,
+        {"title": "User A Note", "content": "This is a note for user A."},
+        format="json",
+    )
+
+    assert response.status_code == 201
+
+    user_b = User.objects.create_user(
+        username="testuser2", password="testpass2"
+    )
+    client_b = api_client(user_b)
+
+    response = client_b.post(
+        NOTES_URL,
+        {"title": "User B Note", "content": "This is a note for user B."},
+        format="json",
+    )
+
+    assert response.status_code == 201
+
+    response = client_a.get(NOTES_URL)
+    assert response.status_code == 200
+    assert response.data["count"] == 1
+    assert response.data["results"][0]["title"] == "User A Note"
+    assert response.data["results"][0]["title"] != "User B Note"
+
+
+@pytest.mark.django_db
+def test_user_cannot_retrieve_another_users_note(user, api_client):
+    client_a = api_client(user)
+
+    response = client_a.post(
+        NOTES_URL,
+        {"title": "User A Note", "content": "This is a note for user A."},
+        format="json",
+    )
+
+    assert response.status_code == 201
+    note_id = response.data["id"]
+
+    user_b = User.objects.create_user(
+        username="testuser2", password="testpass2"
+    )
+    client_b = api_client(user_b)
+
+    response = client_b.get(f"{NOTES_URL}{note_id}/")
+    assert (
+        response.status_code == 404
+    )  # Hidden because it is outside of user_b's queryset.
+
+
+@pytest.mark.django_db
+def test_user_cannot_update_another_users_note(user, api_client):
+    client_a = api_client(user)
+    response = client_a.post(
+        NOTES_URL,
+        {"title": "User A Note", "content": "This is a note for user A."},
+        format="json",
+    )
+
+    assert response.status_code == 201
+    note_id = response.data["id"]
+
+    user_b = User.objects.create_user(
+        username="testuser2", password="testpass2"
+    )
+    client_b = api_client(user_b)
+
+    response = client_b.put(
+        f"{NOTES_URL}{note_id}/",
+        {"title": "Hacked Title", "content": "Hacked content."},
+        format="json",
+    )
+
+    assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_user_cannot_delete_another_users_note(user, api_client):
+    client_a = api_client(user)
+    response = client_a.post(
+        NOTES_URL,
+        {"title": "User A Note", "content": "This is a note for user A."},
+        format="json",
+    )
+
+    assert response.status_code == 201
+    note_id = response.data["id"]
+
+    user_b = User.objects.create_user(
+        username="testuser2", password="testpass2"
+    )
+    client_b = api_client(user_b)
+
+    response = client_b.delete(f"{NOTES_URL}{note_id}/")
+    assert response.status_code == 404

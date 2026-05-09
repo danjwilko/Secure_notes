@@ -4,19 +4,32 @@ import bleach
 import markdown
 
 ALLOWED_TAGS = [
-    "p", "br",
-    "strong", "em",
-    "ul", "ol", "li",
-    "code", "pre",
+    "p",
+    "br",
+    "strong",
+    "em",
+    "ul",
+    "ol",
+    "li",
+    "code",
+    "pre",
     "blockquote",
-    "h1", "h2", "h3",
+    "h1",
+    "h2",
+    "h3",
     "a",
-    "table", "thead", "tbody", "tr", "th", "td"
+    "table",
+    "thead",
+    "tbody",
+    "tr",
+    "th",
+    "td",
 ]
 
 ALLOWED_ATTRIBUTES = {
     "a": ["href", "title"],
 }
+
 
 def render_markdown(text):
     html = markdown.markdown(
