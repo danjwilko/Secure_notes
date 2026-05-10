@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from encrypted_fields.fields import EncryptedTextField
 
 
 class Note(models.Model):
@@ -12,7 +13,7 @@ class Note(models.Model):
     )  # Switched to settings.AUTH_USER_MODEL for custom user
     # model compatibility
     title = models.CharField(max_length=255)
-    content = models.TextField()
+    content = EncryptedTextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

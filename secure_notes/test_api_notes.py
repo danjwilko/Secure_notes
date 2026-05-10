@@ -1,7 +1,14 @@
 import pytest
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
+from django.db import connection
+from django.urls import reverse
+from rest_framework import status
 from rest_framework.test import APIClient
+from rest_framework.throttling import SimpleRateThrottle
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from secure_notes.models import Note
 
 User = get_user_model()
 NOTES_URL = "/api/notes/"
@@ -318,3 +325,79 @@ def test_user_cannot_delete_another_users_note(user, api_client):
 
     response = client_b.delete(f"{NOTES_URL}{note_id}/")
     assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_token_endpoint_is_throttled(settings):
+    settings.REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"]["login"] = "2/minute"
+
+    # Clear DRF throttle cache so previous tests don't interfere
+    SimpleRateThrottle.cache.clear()
+
+    client = APIClient()
+    url = reverse("token_obtain_pair")
+
+    payload = {
+        "username": "wrong-user",
+        "password": "wrong-password",
+    }
+
+    response_1 = client.post(url, payload, format="json")
+    response_2 = client.post(url, payload, format="json")
+    response_3 = client.post(url, payload, format="json")
+
+    assert response_1.status_code == status.HTTP_401_UNAUTHORIZED
+    assert response_2.status_code == status.HTTP_401_UNAUTHORIZED
+    assert response_3.status_code == status.HTTP_429_TOO_MANY_REQUESTS
+
+
+@pytest.mark.django_db
+def test_token_refresh_endpoint_is_throttled(user, api_client, settings):
+    settings.REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"]["login"] = "2/minute"
+
+    # Clear DRF throttle cache so previous tests don't interfere
+    cache.clear()
+
+    client = api_client(user)
+    url = reverse("token_refresh")
+
+    payload = {"refresh": "invalid-token"}
+
+    response_1 = client.post(url, payload, format="json")
+    response_2 = client.post(url, payload, format="json")
+    response_3 = client.post(url, payload, format="json")
+
+    assert response_1.status_code in [
+        status.HTTP_401_UNAUTHORIZED,
+        status.HTTP_400_BAD_REQUEST,
+    ]
+    
+    assert response_2.status_code in [
+        status.HTTP_401_UNAUTHORIZED,
+        status.HTTP_400_BAD_REQUEST,
+    ]
+    assert response_3.status_code == status.HTTP_429_TOO_MANY_REQUESTS
+
+@pytest.mark.django_db
+def test_note_content_is_encrypted_at_rest(user, api_client):
+    client = api_client(user)
+
+    response = client.post(
+        NOTES_URL,
+        {"title": "Encryption Test", "content": "This content should be encrypted."},
+        format="json",
+    )
+
+    assert response.status_code == 201
+    assert response.data["content"] == "This content should be encrypted."
+
+    note = Note.objects.get(id=response.data["id"])
+
+    assert note.content == "This content should be encrypted."
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT content FROM secure_notes_note WHERE id = %s", [note.id])
+        raw_content = cursor.fetchone()[0]
+
+    assert raw_content != "This content should be encrypted."
+    assert "This content should be encrypted." not in raw_content

@@ -24,6 +24,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # Use environment variables
 SECRET_KEY = os.getenv("SECRET_KEY")
+SALT_KEY = os.getenv("SALT_KEY")
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
@@ -87,7 +88,7 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "user": "1000/day",  # Limit authenticated users to 100 requests per day
+        "user": "100/day",  # Limit authenticated users to 100 requests per day
         "anon": "20/day",  # Limit unauthenticated users to 20 requests per day
         "login": "5/minute",  # Limit login attempts to 5 per minute
     },

@@ -1,5 +1,5 @@
-from rest_framework.throttling import ScopedRateThrottle
+from rest_framework.throttling import AnonRateThrottle
 
 
-class LoginRateThrottle(ScopedRateThrottle):
+class LoginRateThrottle(AnonRateThrottle):
     scope = "login"
