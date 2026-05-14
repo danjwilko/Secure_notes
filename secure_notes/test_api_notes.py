@@ -371,12 +371,13 @@ def test_token_refresh_endpoint_is_throttled(user, api_client, settings):
         status.HTTP_401_UNAUTHORIZED,
         status.HTTP_400_BAD_REQUEST,
     ]
-    
+
     assert response_2.status_code in [
         status.HTTP_401_UNAUTHORIZED,
         status.HTTP_400_BAD_REQUEST,
     ]
     assert response_3.status_code == status.HTTP_429_TOO_MANY_REQUESTS
+
 
 @pytest.mark.django_db
 def test_note_content_is_encrypted_at_rest(user, api_client):
@@ -384,7 +385,10 @@ def test_note_content_is_encrypted_at_rest(user, api_client):
 
     response = client.post(
         NOTES_URL,
-        {"title": "Encryption Test", "content": "This content should be encrypted."},
+        {
+            "title": "Encryption Test",
+            "content": "This content should be encrypted.",
+        },
         format="json",
     )
 
@@ -396,7 +400,8 @@ def test_note_content_is_encrypted_at_rest(user, api_client):
     assert note.content == "This content should be encrypted."
     with connection.cursor() as cursor:
         cursor.execute(
-            "SELECT content FROM secure_notes_note WHERE id = %s", [note.id])
+            "SELECT content FROM secure_notes_note WHERE id = %s", [note.id]
+        )
         raw_content = cursor.fetchone()[0]
 
     assert raw_content != "This content should be encrypted."

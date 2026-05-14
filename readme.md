@@ -1,99 +1,216 @@
 # Secure Notes
 
-A secure Django-based notes application with user scoped data, REST API access and JWT authentication.
+Secure Notes is a security-focused Django web application for creating and managing personal notes with authenticated user access, REST API support, and JWT authentication.
 
-## Overview
+The project was built to explore secure-by-design backend engineering concepts using Django and Django REST Framework, with a focus on authentication, access control, API security, testing, and secure configuration practices.
 
-Secure Notes is a Django web application that allows authenticated users to create and manage personal notes.
-
-The project was built as a learning exercise to explore secure-by-design backend development using Django and the Django REST Framework, focusing on authentication, access control, and API design.
+---
 
 ## Features
 
-- User registration and authentication
-- Personal note creation, editing, and deletion
-- Notes scoped to the authenticated user
-- REST API for notes using Django REST Framework
-- JWT authentication for API access
-- API throttling to reduce abuse (planned)
+### Core Features
+
+* User registration and authentication
+* Create, edit, and delete personal notes
+* User-scoped note ownership and isolation
+* Markdown note rendering
+* Responsive Bootstrap-based UI
+* REST API access using Django REST Framework
+
+### API Features
+
+* JWT authentication using SimpleJWT
+* Protected API endpoints
+* Pagination support
+* OpenAPI schema generation
+* Interactive Swagger documentation
+
+### Security Features
+
+* User-scoped queryset filtering
+* Owner-based access control
+* JWT-protected API endpoints
+* API throttling on authentication endpoints
+* Markdown sanitisation using Bleach
+* Database uniqueness constraints
+* Environment variable configuration
+* Production-aware security settings
+* Permission and ownership API tests
+* Invalid JWT handling tests
+* Field-level encryption using django-fernet-encrypted-fields
+* Encrypted note content at rest
+* Encryption key material derived from Django `SECRET_KEY` and `SALT_KEY`
+
+---
 
 ## Tech Stack
 
 ### Backend
 
-- Python
-- Django
-- Django REST Framework
+* Python 3
+* Django 6
+* Django REST Framework
 
-### Authentication
+### Authentication & Security
 
-- Django session authentication (web interface)
-- JWT authentication (API access)
+* Django session authentication
+* JWT authentication (SimpleJWT)
+* Field-level encryption (django-fernet-encrypted-fields)
+* Bleach sanitisation
+* Django security middleware/settings
+
+### Documentation
+
+* drf-spectacular
+* OpenAPI / Swagger
 
 ### Database
 
-- SQLite (development)
+* SQLite (development)
 
-### Tests
+### Testing
 
-- Pytest
-- Django ORM test database
+* Pytest
+* pytest-django
 
-## Security Considerations
+---
 
-- Notes restricted to the authenticated user
-- API endpoints require JWT authentication
-- Querysets filtered by request user
-- Rate limiting on authentication endpoints
-- Audit logging for note operations(planned)
+## Running the Project Locally
 
-## Running the project locally
+Clone the repository:
 
-    git clone <repo>
-    cd secure-notes
+```bash
+git clone <repo-url>
+cd secure-notes
+```
 
-    python -m venv venv
-    source venv/bin/activate
+Create and activate a virtual environment:
 
-    pip install -r requirements.txt
+```bash
+python -m venv venv
+source venv/bin/activate
+```
 
-    python manage.py migrate
-    python manage.py runserver
+Install dependencies:
 
-## API Usage
+```bash
+pip install -r requirements.txt
+```
 
-The API allows programmatic access to the notes using JWT authentication.
+Create your environment configuration:
+
+```bash
+cp .env.example .env
+```
+
+Apply database migrations:
+
+```bash
+python manage.py migrate
+```
+
+(Optional) Create an admin account:
+
+```bash
+python manage.py createsuperuser
+```
+
+Run the development server:
+
+```bash
+python manage.py runserver
+```
+
+---
+
+## API Documentation
+
+Interactive Swagger documentation:
+
+```text
+/api/docs/
+```
+
+OpenAPI schema:
+
+```text
+/api/schema/
+```
 
 Example endpoints:
 
-    POST /api/token/
-    GET /api/notes/
-    POST /api/notes/
+```text
+POST /api/token/
+GET /api/notes/
+POST /api/notes/
+```
 
-## Testing
+---
 
-Tests are implemented using pytest and Django's test database.
+## Tests
 
-Run tests with: 
-    pytest
+Tests are implemented using pytest and Django’s test database.
 
-## Documentation
+Run the test suite with:
 
-API and design documentation is in progress and will be published to the /docs directory on completion.
+```bash
+pytest
+```
+
+Current test coverage includes:
+
+* JWT authentication tests
+* Invalid token handling
+* CRUD API tests
+* Ownership and permission tests
+* Partial update tests
+* Duplicate title validation tests
+* Cross-user access protection tests
+
+---
+
+## Project Goals
+
+This project focuses on exploring practical backend engineering concepts including:
+
+* Secure authentication flows
+* User-scoped data isolation
+* REST API architecture
+* Backend testing practices
+* Secure configuration handling
+* Defensive backend design
+* API security concepts
+* Production-aware Django configuration
+
+---
 
 ## Roadmap
 
-- Add API throttling to limit request on authentication endpoints.
-- Audit logging for note operations.
-- Migrate database to PostgreSQL for production environment.
-- Expand test coverage to include edge cases and complete coverage.
+### Short-Term
 
-## Learning Goals
+* README and architecture documentation improvements
+* Production deployment configuration
+* Security header review
+* Additional edge-case testing
+* CI/CD pipeline setup
 
-The project was built to continue solidifying python knowledge and Django basics while exploring:
+### Mid-Term
 
-- Django application architecture.
-- REST API development with the Django Rest Framework.
-- Authentication and authorisation patterns.
-- Secure handling of user-scoped data.
-- Backend testing using pytest.
+* Full-text search
+* Tags/categories
+* Export functionality
+* Audit logging
+* PostgreSQL deployment
+
+### Advanced Exploration
+
+* KEK/DEK experimentation
+* Zero-knowledge architecture research
+* Client-side encryption experiments
+* Separate frontend/API-only architecture
+
+---
+
+## Disclaimer
+
+This project is intended as a learning and portfolio project focused on backend engineering and security-oriented development practices. It is not currently intended for production use without additional deployment hardening and operational review.

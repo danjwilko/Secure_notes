@@ -25,8 +25,19 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 # Use environment variables
 SECRET_KEY = os.getenv("SECRET_KEY")
 SALT_KEY = os.getenv("SALT_KEY")
+
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY is not set")
+
+if not SALT_KEY:
+    raise RuntimeError("SALT_KEY is not set")
+
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv("ALLOWED_HOSTS", "localhost, 127.0.0.1").split(",")
+]
 
 # Optional security settings from environment variables
 SESSION_COOKIE_HTTPONLY = (
@@ -41,6 +52,12 @@ SECURE_CONTENT_TYPE_NOSNIFF = (
 EMAIL_BACKEND = os.getenv(
     "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
 )
+
+if not DEBUG:
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
 
 
 # Quick-start development settings - unsuitable for production
