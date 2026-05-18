@@ -8,6 +8,8 @@ app_name = "secure_notes"
 urlpatterns = [
     # Home page showing list of notes.
     path("", views.index, name="index"),
+    # Dashboard page showing user stats and recent activity.
+    path("dashboard/", views.dashboard, name="dashboard"),
     # List of notes for the logged-in user.
     path("notes/", views.notes, name="notes"),
     # Additional URL patterns for note detail, create, update, delete.

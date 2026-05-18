@@ -221,6 +221,6 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 # My Settings.
-LOGIN_REDIRECT_URL = "secure_notes:index"
+LOGIN_REDIRECT_URL = "secure_notes:dashboard"
 LOGOUT_REDIRECT_URL = "secure_notes:index"
 LOGIN_URL = "accounts:login"
