@@ -24,6 +24,7 @@ def index(request):
         return redirect("secure_notes:notes")
     return render(request, "secure_notes/index.html")
 
+
 @login_required
 def dashboard(request):
     notes = Note.objects.filter(owner=request.user)
@@ -32,10 +33,11 @@ def dashboard(request):
         "note_count": notes.count(),
         "latest_note": notes.order_by("-created_at").first(),
         "recently_updated": notes.order_by("-updated_at").first(),
-        "recent_notes": notes.order_by("-updated_at")[:4]
+        "recent_notes": notes.order_by("-updated_at")[:4],
     }
 
     return render(request, "secure_notes/dashboard.html", context)
+
 
 @login_required
 def notes(request):
