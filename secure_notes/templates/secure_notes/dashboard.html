@@ -55,7 +55,7 @@
 </div>
 
 <div class="row g-4">
-        <div class="card shadow-sm h-100">
+        <div class="card dashboard-recent-card shadow-sm h-100">
             <div class="card-header">
                 <strong>Recent notes</strong>
             </div>
@@ -76,7 +76,7 @@
 
                 <a href="{% url 'secure_notes:edit_note' note.id %}"
                    class="btn btn-sm btn-outline-secondary position-relative z-2">
-                    <i class="bi bi-pencil-square"></i>
+                    <i class="bi bi-pencil-fill"></i>
                 </a>
             </div>
 
@@ -88,7 +88,6 @@
                 <p class="dashboard-note-preview small text-muted mb-0">
     {{ note.content|striptags }}
 </p>
-                </p>
             </div>
         </div>
     </div>

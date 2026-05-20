@@ -1,81 +1,72 @@
 # Secure Notes
 
-Secure Notes is a security-focused Django web application for creating and managing personal notes with authenticated user access, REST API support, and JWT authentication.
+A security-focused Django web application for creating and managing personal notes.
 
-The project was built to explore secure-by-design backend engineering concepts using Django and Django REST Framework, with a focus on authentication, access control, API security, testing, and secure configuration practices.
+The project was built to explore backend engineering and security-focused development practices using Django and Django REST Framework, with a focus on authentication, access control, API security, encryption-at-rest, testing, and production-aware configuration.
+
+---
+
+## Architecture overview
+
+The application uses a hybrid Django architecture:
+
+- Traditional Django templates for the web interface
+- Django REST Framework for API endpoints
+- Session authentication for browser access
+- JWT authentication for API access
+- PostgreSQL as the primary database
+- Field-level encryption for note content
+
+Notes are always scoped to the authenticated user through queryset filtering and ownership enforcement at the API layer.
 
 ---
 
 ## Features
 
-### Core Features
+### Core application
 
-* User registration and authentication
-* Create, edit, and delete personal notes
-* User-scoped note ownership and isolation
-* Markdown note rendering
-* Responsive Bootstrap-based UI
-* REST API access using Django REST Framework
+- User registration, authentication, and session management
+- Create, edit, and delete personal notes
+- Markdown rendering with sanitisation
+- Responsive Bootstrap UI
 
-### API Features
+### API
 
-* JWT authentication using SimpleJWT
-* Protected API endpoints
-* Pagination support
-* OpenAPI schema generation
-* Interactive Swagger documentation
+- Full REST API via Django REST Framework
+- JWT authentication with refresh token rotation and blacklisting
+- Owner-scoped queryset filtering on all endpoints
+- Pagination and partial update (PATCH) support
+- OpenAPI schema generation and interactive Swagger documentation
 
-### Security Features
+### Security
 
-* User-scoped queryset filtering
-* Owner-based access control
-* JWT-protected API endpoints
-* API throttling on authentication endpoints
-* Markdown sanitisation using Bleach
-* Database uniqueness constraints
-* Environment variable configuration
-* Production-aware security settings
-* Permission and ownership API tests
-* Invalid JWT handling tests
-* Field-level encryption using django-fernet-encrypted-fields
-* Encrypted note content at rest
-* Encryption key material derived from Django `SECRET_KEY` and `SALT_KEY`
+- Field-level encryption at rest using Fernet (note content encrypted in the database)
+- Encryption key material derived from `SECRET_KEY` and `SALT_KEY`
+- User-scoped queryset filtering — users can only access their own notes
+- Owner automatically assigned on creation — not trusted from client input
+- JWT access tokens short-lived (5 minutes); refresh tokens rotate on use and are blacklisted after rotation
+- API throttling on authentication and general endpoints
+- Markdown sanitisation via Bleach to reduce XSS risk from user content
+- Database uniqueness constraints per user
+- Environment variable configuration via `.env`
 
 ---
 
-## Tech Stack
+## Tech stack
 
-### Backend
-
-* Python 3
-* Django 6
-* Django REST Framework
-
-### Authentication & Security
-
-* Django session authentication
-* JWT authentication (SimpleJWT)
-* Field-level encryption (django-fernet-encrypted-fields)
-* Bleach sanitisation
-* Django security middleware/settings
-
-### Documentation
-
-* drf-spectacular
-* OpenAPI / Swagger
-
-### Database
-
-* SQLite (development)
-
-### Testing
-
-* Pytest
-* pytest-django
+| Layer | Technology |
+|---|---|
+| Backend | Python 3, Django 6, Django REST Framework |
+| Authentication | Django sessions, SimpleJWT (JWT) |
+| Encryption | django-fernet-encrypted-fields, Fernet symmetric encryption |
+| Sanitisation | Bleach |
+| API documentation | drf-spectacular, OpenAPI/Swagger |
+| Database | PostgreSQL |
+| Testing | Pytest, pytest-django |
 
 ---
 
-## Running the Project Locally
+## Running locally
 
 Clone the repository:
 
@@ -87,8 +78,8 @@ cd secure-notes
 Create and activate a virtual environment:
 
 ```bash
-python -m venv venv
-source venv/bin/activate
+python -m venv sn_env
+source sn_env/bin/activate
 ```
 
 Install dependencies:
@@ -103,13 +94,15 @@ Create your environment configuration:
 cp .env.example .env
 ```
 
+Edit `.env` and set your values — see `.env.example` for required keys.
+
 Apply database migrations:
 
 ```bash
 python manage.py migrate
 ```
 
-(Optional) Create an admin account:
+Create an admin account (optional):
 
 ```bash
 python manage.py createsuperuser
@@ -121,96 +114,124 @@ Run the development server:
 python manage.py runserver
 ```
 
+> **Note:** PostgreSQL is required. See [`docs/postgres-fedora-setup.md`](docs/postgres-fedora-setup.md) for a full setup walkthrough including common errors.
+
 ---
 
-## API Documentation
+## Environment variables
 
-Interactive Swagger documentation:
+| Variable | Description |
+|---|---|
+| `SECRET_KEY` | Django secret key |
+| `SALT_KEY` | Salt used in encryption key derivation |
+| `DEBUG` | `True` for development, `False` for production |
+| `ALLOWED_HOSTS` | Comma-separated list of allowed hosts |
+| `DB_NAME` | PostgreSQL database name |
+| `DB_USER` | PostgreSQL user |
+| `DB_PASSWORD` | PostgreSQL password |
+| `DB_HOST` | Database host (default: `localhost`) |
+| `DB_PORT` | Database port (default: `5432`) |
 
-```text
+---
+
+## API documentation
+
+With the server running, interactive Swagger docs are available at:
+
+```
 /api/docs/
 ```
 
 OpenAPI schema:
 
-```text
+```
 /api/schema/
 ```
 
-Example endpoints:
+Key endpoints:
 
-```text
-POST /api/token/
-GET /api/notes/
-POST /api/notes/
+```
+POST   /api/token/           Obtain JWT access and refresh tokens
+POST   /api/token/refresh/   Refresh access token
+GET    /api/notes/           List notes (authenticated user only)
+POST   /api/notes/           Create a note
+GET    /api/notes/{id}/      Retrieve a note
+PATCH  /api/notes/{id}/      Partial update
+DELETE /api/notes/{id}/      Delete a note
 ```
 
 ---
 
 ## Tests
 
-Tests are implemented using pytest and Django’s test database.
-
-Run the test suite with:
+Run the full test suite:
 
 ```bash
 pytest
 ```
 
-Current test coverage includes:
+Test coverage includes:
 
-* JWT authentication tests
-* Invalid token handling
-* CRUD API tests
-* Ownership and permission tests
-* Partial update tests
-* Duplicate title validation tests
-* Cross-user access protection tests
+- JWT authentication and token lifecycle
+- Invalid and expired token handling
+- CRUD operations via API
+- Ownership isolation — users cannot access other users' notes
+- Permission and access control edge cases
+- Partial update (PATCH) behaviour
+- Duplicate title validation per user
+- Cross-user same-title isolation
+- Malformed request handling
+- Large input handling
+- Markdown rendering
+- API throttling
 
 ---
 
-## Project Goals
+## Development and Security notes
 
-This project focuses on exploring practical backend engineering concepts including:
+The `docs/` folder contains working implementation notes and security-related development writeups created during the build process. Some documents are still being expanded and refined as the project evolves.
 
-* Secure authentication flows
-* User-scoped data isolation
-* REST API architecture
-* Backend testing practices
-* Secure configuration handling
-* Defensive backend design
-* API security concepts
-* Production-aware Django configuration
+- [`docs/jwt-implementation.md`](docs/jwt-implementation.md) — JWT design decisions and token lifecycle
+- [`docs/api-throttling.md`](docs/api-throttling.md) — throttling approach and configuration
+- [`docs/markdown-sanitisation.md`](docs/markdown-sanitisation.md) — Bleach allowlist approach and XSS prevention
+- [`docs/application-hardening.md`](docs/application-hardening.md) — queryset filtering, IDOR prevention, and the authentication vs authorisation distinction
+- [`docs/postgres-fedora-setup.md`](docs/postgres-fedora-setup.md) — PostgreSQL setup walkthrough for Fedora
 
 ---
 
 ## Roadmap
 
-### Short-Term
+### Current focus (Phase 1 — portfolio polish)
 
-* README and architecture documentation improvements
-* Production deployment configuration
-* Security header review
-* Additional edge-case testing
-* CI/CD pipeline setup
+- README and architecture documentation
+- Production security settings review
+- Security headers
+- End-to-end golden path test
+- `.env.example` and project hygiene
 
-### Mid-Term
+### Next (Phase 2 — feature expansion)
 
-* Full-text search
-* Tags/categories
-* Export functionality
-* Audit logging
-* PostgreSQL deployment
+- Full-text search
+- Tags and categories
+- Export (JSON and Markdown)
+- Toast notifications and UX improvements
 
-### Advanced Exploration
+### Engineering depth (Phase 3)
 
-* KEK/DEK experimentation
-* Zero-knowledge architecture research
-* Client-side encryption experiments
-* Separate frontend/API-only architecture
+- Audit logging (login, note events, failed auth)
+- CI/CD via GitHub Actions
+- Docker and docker-compose
+- Production deployment
+
+### Research track (Phase 4)
+
+- KEK/DEK encryption architecture exploration
+- Zero-knowledge prototype with WebCrypto and Argon2id
+- Client-side encryption research
+- Separate frontend (React or Svelte)
 
 ---
 
 ## Disclaimer
 
-This project is intended as a learning and portfolio project focused on backend engineering and security-oriented development practices. It is not currently intended for production use without additional deployment hardening and operational review.
+This project is a learning and portfolio project focused on backend engineering and security-oriented development. It is not intended for production use without additional deployment hardening and operational review.
