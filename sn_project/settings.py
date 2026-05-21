@@ -53,14 +53,17 @@ EMAIL_BACKEND = os.getenv(
     "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
 )
 
-if (
-    ENVIRONMENT := os.getenv("ENVIRONMENT", "development").lower()
-    == "production"
-):
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development").lower()
+
+SECURE_REFERRER_POLICY = "same-origin"
+
+if ENVIRONMENT == "production":
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
+
     SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 
 # Quick-start development settings - unsuitable for production
@@ -221,7 +224,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 

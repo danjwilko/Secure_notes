@@ -65,10 +65,10 @@ def note_detail(request, note_id):
 def create_note(request):
     """View function to handle the creation of a new note."""
     if request.method != "POST":
-        form = NoteForm()
+        form = NoteForm(user=request.user)
     else:
-        # Process the submitted form data.
-        form = NoteForm(data=request.POST)
+        # Process the submitted form data, check for title uniqueness.
+        form = NoteForm(request.POST or None, user=request.user)
         if form.is_valid():
             # Create a new note instance but don't save to the database yet.
             new_note = form.save(commit=False)
@@ -90,10 +90,10 @@ def edit_note(request, note_id):
 
     if request.method != "POST":
         # Pre-fill the form with the existing note data.
-        form = NoteForm(instance=note)
+        form = NoteForm(instance=note, user=request.user)
     else:
         # Process the submitted form data.
-        form = NoteForm(instance=note, data=request.POST)
+        form = NoteForm(instance=note, data=request.POST, user=request.user)
         if form.is_valid():
             form.save()
             return redirect("secure_notes:note_detail", note_id=note.id)
