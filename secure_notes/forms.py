@@ -29,7 +29,6 @@ class NoteForm(forms.ModelForm):
 
         return title
 
-
     class Meta:
         model = Note
         fields = ["title", "content"]
