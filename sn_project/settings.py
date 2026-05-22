@@ -36,9 +36,11 @@ if not SALT_KEY:
 
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")]
 if not DEBUG:
-    ALLOWED_HOSTS.extend = [".railway.app"]
+    ALLOWED_HOSTS.extend ([".railway.app"])
 
 # Optional security settings from environment variables
 SESSION_COOKIE_HTTPONLY = (
