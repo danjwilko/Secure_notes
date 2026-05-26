@@ -72,7 +72,6 @@ class CustomChangePasswordView(LoginRequiredMixin, PasswordChangeView):
 class CustomChangePasswordDoneView(LoginRequiredMixin,PasswordChangeDoneView):
     """Custom password change done view for logged in users that uses
     our custom template"""
-
     template_name = "registration/password_change_done.html"
     success_url = reverse_lazy("secure_notes:index")
 

@@ -6,8 +6,6 @@ from . import views
 
 app_name = "accounts"
 urlpatterns = [
-    # Include default auth urls.
-    path("", include("django.contrib.auth.urls")),
     # Registaration page.
     path("register/", views.register, name="register"),
     # Custom password reset - Uses Django's built-in views but with
@@ -55,4 +53,6 @@ urlpatterns = [
         views.delete_account,
         name="delete_account",
     ),
+    # Include default auth urls.
+    path("", include("django.contrib.auth.urls")),
 ]
