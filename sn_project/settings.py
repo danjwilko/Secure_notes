@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables from .env file
 # commented out as per railway reccomendation.
-# load_dotenv(os.path.join(BASE_DIR, ".env"))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # Use environment variables
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -38,9 +38,10 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")]
+    for host in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+]
 if not DEBUG:
-    ALLOWED_HOSTS.extend (["securenotes-production.up.railway.app"])
+    ALLOWED_HOSTS.extend(["securenotes-production.up.railway.app"])
 
 # Optional security settings from environment variables
 SESSION_COOKIE_HTTPONLY = (
@@ -62,10 +63,9 @@ SECURE_REFERRER_POLICY = "same-origin"
 if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = False # Railway handles SSL termination, so we don't
+    SECURE_SSL_REDIRECT = False  # Railway handles SSL termination, so we don't
     # enable this in Django.
-    CSRF_TRUSTED_ORIGINS = [
-    "https://securenotes-production.up.railway.app"]
+    CSRF_TRUSTED_ORIGINS = ["https://securenotes-production.up.railway.app"]
 
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
@@ -143,7 +143,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-
 ]
 
 ROOT_URLCONF = "sn_project.urls"

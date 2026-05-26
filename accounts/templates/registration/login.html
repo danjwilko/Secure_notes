@@ -18,5 +18,16 @@
     {% bootstrap_form form %}
     {% bootstrap_button button_type="submit" content="Login" %}
 </form>
+<div class="text-center">
+      <button type="button" class="btn btn-primary text-center mb-2 mt-3" onclick="location.href='{% url 'accounts:register' %}'">
+        Don't have an account?
+        Register here
+      </button>
+        </div>
+      <div class="text-center">
+      <button type="button" class="btn btn-warning text-center mb-2 mt-3" onclick="location.href='{% url 'accounts:password_reset' %}' ">
+        Forgot your password?
+      </button>
+    </div>
 
 {% endblock content %}

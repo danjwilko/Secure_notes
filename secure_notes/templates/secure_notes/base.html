@@ -26,12 +26,24 @@
         aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'secure_notes:notes' %}">Notes</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'secure_notes:create_note' %}">Create Note</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+            <li><a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change Password</a></li>
+            <li><a class="dropdown-item" href="#">GDPR</a></li>
+            <li><a class="dropdown-item" href="{% url 'accounts:delete_account' %}">Delete Account</a></li>
+          </ul>
+                </li>
+                {% endif %}
                 
             </ul> <!-- End of left-aligned nav items -->
 
