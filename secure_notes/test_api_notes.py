@@ -1,6 +1,10 @@
+import re
+
 import pytest
 from django.contrib.auth import get_user_model
+from django.core import mail
 from django.db import connection
+from django.test.utils import override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -500,3 +504,54 @@ def test_markdown_sanitises_unsafe_links_and_image_attributes(client, user):
     assert "onload" not in content
     assert "Click me" in content
     assert "Raw link" in content
+
+# Tests for password change and reset - (not for API endpoints)
+@pytest.mark.django_db
+def test_user_can_change_password(client ,user):
+    client.login(username="testuser", password="testpass")
+
+    response = client.post(
+        reverse("accounts:password_change"),
+        {
+            "old_password": "testpass",
+            "new_password1": "newstrongpassword123",
+            "new_password2": "newstrongpassword123",
+        },
+    )
+
+    assert response.status_code == 302
+    user.refresh_from_db()
+    assert user.check_password("newstrongpassword123")
+
+@pytest.mark.django_db
+def test_user_can_reset_password(client, user, mailoutbox):
+    user.email = "test@test.com"
+    user.save()
+    
+    # Here we request the reset email.
+    response = client.post(
+        reverse("accounts:password_reset"),
+        {"email": "test@test.com"},
+    )
+
+    assert response.status_code == 302
+    assert len(mailoutbox) == 1
+    
+    email = mailoutbox[0].body
+    url_match = re.search(r'(/accounts/password_reset_confirm/[^">\s]+)', email)
+    url = url_match.group(1)
+
+
+    response = client.get(url, follow=True)
+
+    assert response.status_code == 200
+    post_url = response.redirect_chain[-1][0]
+    
+    response = client.post(post_url, {
+        "new_password1": "newstrongpassword123",
+        "new_password2": "newstrongpassword123",
+    }, follow=True)
+    assert response.status_code == 200
+    
+    user.refresh_from_db()
+    assert user.check_password("newstrongpassword123")

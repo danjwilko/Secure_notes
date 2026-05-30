@@ -1,3 +1,16 @@
+.navbar {
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+.navbar-brand:hover {
+    color: #0d6efd !important; /* bootstrap primary */
+}
+.nav-link:hover {
+    transition: color 0.2s ease;
+    background-color: rgba(13, 110, 253, 0.1) !important; /* bootstrap secondary */
+    border-radius: 0.5rem;
+}           
+
 .note-preview,
 .dashboard-note-preview {
     display: -webkit-box;
@@ -5,6 +18,9 @@
     line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+.dashboard-recent-card{
+    padding-bottom: 1rem !important;
 }
 
 /* Note content styling for markdown rendering */
@@ -16,18 +32,19 @@
 .note-card .card-header {
     background-color: transparent;
     border-bottom: none;
-    padding: 1 0 0.75rem 0;
+    padding: 1rem 0 0.75rem 0;
 }
 
 .note-card {
     position: relative;
     border-left: 3px solid #3b82f6;
+    padding: 0 1rem  1rem 0.75rem;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .note-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.08);
+    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.08) !important;
     cursor: pointer;
 }
 
@@ -87,4 +104,12 @@
 
 .dashboard-card {
     border-left: 3px solid #0d6efd;
+}
+.footer-link {
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    color: #0d6efd !important; /* bootstrap primary */
+    text-decoration: underline !important;
 }

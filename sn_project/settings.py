@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     # My apps.
     "secure_notes",
     "accounts",
+    "legal",
     # Third-party apps.
     "django_bootstrap5",
     "rest_framework",
@@ -157,6 +158,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "secure_notes.context_processors.current_year",
             ],
         },
     },

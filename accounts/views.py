@@ -55,10 +55,12 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 
     template_name = "registration/password_reset_confirm.html"
     form_class = SetPasswordForm
+    success_url = reverse_lazy("accounts:password_reset_complete")
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     """Custom password reset complete view that uses our custom template"""
 
     template_name = "registration/password_reset_complete.html"
+    
 
 # User requests password change flow.
 class CustomChangePasswordView(LoginRequiredMixin, PasswordChangeView):

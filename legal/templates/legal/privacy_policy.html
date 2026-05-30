@@ -1,0 +1,178 @@
+{% extends "secure_notes/base.html" %}
+
+{% block page_header %}
+    <h2 class="h2">Privacy Policy</h2>
+{% endblock page_header %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="col-lg-8 mx-auto">
+<p class="lead">This privacy policy describes how Secure Notes collects, uses, and protects your personal data when you use our application. We are committed to protecting your privacy and complying with applicable data protection laws, including the UK GDPR / GDPR.</p>
+<p class="text-muted">Last updated: May 2026</p>
+
+<section class="mb-5">
+<h3>Who we are</h3>
+
+<p>
+Secure Notes is a personal notes application developed as a portfolio and learning project by an individual developer. It is not currently operated as a commercial service.
+
+If you have any questions about this policy or your data, you can contact:
+
+<a href="mailto:danielwilkinson.dev@gmail.com">
+    danielwilkinson.dev@gmail.com
+</a>
+</p>
+</section>
+
+<section class="mb-5">
+<h3>What data we collect</h3>
+
+<p>
+When you create an account and use Secure Notes, we may collect and store the following information:
+</p>
+<ul>
+<li><strong>Username</strong> — chosen by you during registration</li>
+<li><strong>Password</strong> — stored securely as a one-way cryptographic hash</li>
+<li><strong>Email address</strong> — optional, used for password reset functionality if provided</li>
+<li><strong>Note content</strong> — notes created and stored by you within the application</li>
+<li><strong>Timestamps</strong> — dates and times associated with account activity and note creation or updates</li>
+</ul>
+<p>
+We do not knowingly collect payment information, postal addresses, or government-issued identification.
+</p>
+</section>
+
+<section class="mb-5">
+    <h3>How your data is used</h3>
+
+<p>
+Your data is used only to provide and operate the application, including:
+</p>
+<ul>
+<li>Authenticating your account</li>
+<li>Allowing you to create, store, and manage notes</li>
+<li>Sending password reset emails when requested</li>
+<li>Maintaining application security and functionality</li>
+</ul>
+<p>
+We do not sell your data or use it for advertising or marketing purposes.
+</p>
+</section>
+
+<section class="mb-5">
+    <h3>Legal basis for processing</h3>
+<p>
+Under UK GDPR / GDPR, the lawful basis for processing your data is:
+</p>
+<ul>
+    <li><strong>Contract</strong> — processing necessary to provide the service you request by creating an account and using the application</li>
+    <li><strong>Legitimate interests</strong> — maintaining application security, preventing abuse, and ensuring the service functions correctly</li>
+</ul>
+</section>
+
+<section class="mb-5">
+    <h3>How your data is protected</h3>
+<p>
+Reasonable technical and organisational measures are used to help protect your data, including:
+</p>
+<ul>
+    <li>Password hashing using Django’s built-in authentication system</li>
+    <li>HTTPS encryption for data transmitted between your browser and the application</li>
+    <li>Field-level encryption for stored note content</li>
+    <li>Access controls designed to restrict access to your notes to your account</li>
+    <li>JWT-based authentication for API access with short-lived access tokens</li>
+</ul>
+<p>
+No method of electronic storage or transmission over the internet can be guaranteed to be completely secure.
+</p>
+</section>
+
+<section class="mb-5">
+    <h3>Data Hosting</h3>
+
+<p>
+Secure Notes is hosted using <a href="https://railway.app" target="_blank" rel="noopener noreferrer">Railway</a> infrastructure services.
+
+Infrastructure providers may process limited technical data such as IP addresses, request logs, and server diagnostics as part of hosting and operational requirements. You can review Railway’s privacy policy here:
+
+<a href="https://railway.app/legal/privacy" target="_blank" rel="noopener noreferrer">Railway Privacy Policy</a>
+
+</p>
+</section>
+
+<section class="mb-5">
+    <h3>How long we keep your data</h3>
+
+<p>
+Your data is generally retained for as long as your account remains active.
+
+If you delete your account, associated account information and note data will be removed from the active application database. Limited technical logs or backup data may persist temporarily for security, legal, or disaster recovery purposes before being automatically overwritten or deleted.
+</p>
+</section>
+
+<section class="mb-5">
+    <h3>Your rights</h3>
+
+<p>
+Under UK GDPR / GDPR, you have rights including:
+</p>
+<ul>
+    <li>The right to access the personal data we hold about you</li>
+    <li>The right to request correction of inaccurate data</li>
+    <li>The right to request deletion of your data</li>
+    <li>The right to object to certain types of processing</li>
+    <li>The right to request restriction of processing</li>
+</ul>
+<p>
+To exercise these rights, contact:
+
+<a href="mailto:danielwilkinson.dev@gmail.com">
+    danielwilkinson.dev@gmail.com
+</a>
+
+You also have the right to lodge a complaint with the UK Information Commissioner’s Office (ICO):
+
+<a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer">ICO Website</a>
+</p>
+</section>
+
+<section class="mb-5">
+    <h3>Cookies</h3>
+<p>
+Secure Notes uses essential authentication and session-related cookies required for the application to function correctly.
+
+These cookies are not used for advertising, profiling, or third-party tracking purposes.
+
+The application does not intentionally use third-party analytics or advertising cookies.
+</p>
+</section>
+
+<section class="mb-5">
+    <h3>Children</h3>
+<p>
+Secure Notes is not intended for children under the age of 13, and we do not knowingly collect personal data from children.
+</p>
+</section>
+
+<section class="mb-5">
+    <h3>Changes to this policy</h3>
+<p>
+This policy may be updated from time to time to reflect changes to the application or legal requirements. The “Last updated” date at the top of this page will be revised when significant changes are made.
+</p>
+</section>
+
+<section class="mb-5">
+    <h3>Contact</h3>
+<p>
+For privacy-related questions or requests, contact:
+
+<a href="mailto:danielwilkinson.dev@gmail.com">
+    danielwilkinson.dev@gmail.com
+</a>
+</p>
+</section>
+    </div>
+</div>
+{% endblock content %}
+
+

@@ -17,6 +17,7 @@ class ThrottledTokenRefreshView(jwt_views.TokenRefreshView):
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
+    path("legal/", include("legal.urls")),
     path("", include("secure_notes.urls")),
     path("api/", include("secure_notes.api_urls")),
     path("api-auth/", include("rest_framework.urls")),

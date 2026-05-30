@@ -39,7 +39,7 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
             <li><a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change Password</a></li>
-            <li><a class="dropdown-item" href="#">GDPR</a></li>
+            <li><a class="dropdown-item" href="{% url 'legal:privacy_policy' %}">GDPR</a></li>
             <li><a class="dropdown-item" href="{% url 'accounts:delete_account' %}">Delete Account</a></li>
           </ul>
                 </li>
@@ -83,5 +83,35 @@
         {% block content %}{% endblock content %}
     </div>
 </main>
+<footer class="border-top mt-5 py-4 bg-white">
+    <div class="container">
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+
+            <!-- Left -->
+            <div class="text-muted small">
+                © {{ current_year }} Secure Notes
+            </div>
+
+            <!-- Right -->
+            <div class="d-flex gap-4 mt-3 mt-md-0">
+
+                <a href="{% url 'legal:privacy_policy' %}"
+                   class="text-muted small text-decoration-none footer-link">
+                    Privacy Policy
+                </a>
+
+                <a href="mailto:danielwilkinson.dev@gmail.com"
+                   class="text-muted small text-decoration-none footer-link">
+                    Contact
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+</footer>
 </body>
+
 </html>

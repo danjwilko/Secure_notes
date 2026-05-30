@@ -1,5 +1,6 @@
 """Defines the URL patterns for the accounts app."""
 
+from django.contrib.auth import views as auth_views
 from django.urls import include, path
 
 from . import views
@@ -8,6 +9,11 @@ app_name = "accounts"
 urlpatterns = [
     # Registaration page.
     path("register/", views.register, name="register"),
+    # Default auth urls for login and logout.
+    #Login
+    path("login/", auth_views.LoginView.as_view(), name="login"),
+    # Logout
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     # Custom password reset - Uses Django's built-in views but with
     # custom templates and forms.
     # Password reset on login flow:
@@ -41,7 +47,7 @@ urlpatterns = [
         views.CustomChangePasswordView.as_view(),
         name="password_change",
     ),
-    # redirect the user to the dashboard on cancel or successful password change
+    # redirect the user to the dashboard on cancel/successful password change
     path(
         "password_change_done/",
         views.CustomChangePasswordDoneView.as_view(),
@@ -53,6 +59,4 @@ urlpatterns = [
         views.delete_account,
         name="delete_account",
     ),
-    # Include default auth urls.
-    path("", include("django.contrib.auth.urls")),
 ]

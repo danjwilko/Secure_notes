@@ -1,0 +1,113 @@
+.navbar {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.navbar-brand:hover {
+    color: #0d6efd !important; /* bootstrap primary */
+}
+.nav-link:hover {
+    transition: color 0.2s ease;
+    background-color: rgba(13, 110, 253, 0.1) !important; /* bootstrap secondary */
+
+    border-radius: 0.25rem;
+}           
+
+.note-preview,
+.dashboard-note-preview {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Note content styling for markdown rendering */
+
+.dashboard-recent-card .card-header{
+    border-bottom: none;
+}
+
+.note-card .card-header {
+    background-color: transparent;
+    border-bottom: none;
+    padding: 1rem 0 0.75rem 0;
+}
+
+.note-card {
+    position: relative;
+    border-left: 3px solid #3b82f6;
+    padding: 0 1rem  1rem 0.75rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.note-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.08) !important;
+    cursor: pointer;
+}
+
+.note-content h1,
+.note-content h2,
+.note-content h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.note-content p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.note-content ul,
+.note-content ol {
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+.note-content pre {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+}
+
+.note-content code {
+    background-color: #f1f3f5;
+    padding: 0.15rem 0.35rem;
+    border-radius: 0.25rem;
+    font-family: monospace;
+}
+
+
+.note-content blockquote {
+    border-left: 4px solid #ced4da;
+    padding-left: 1rem;
+    color: #6c757d;
+    margin-left: 0;
+}
+
+
+.note-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+.note-content th,
+.note-content td {
+    border: 1px solid #dee2e6;
+    padding: 0.5rem;
+}
+
+.dashboard-card {
+    border-left: 3px solid #0d6efd;
+}
+.footer-link {
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    color: #0d6efd !important; /* bootstrap primary */
+    text-decoration: underline !important;
+}
