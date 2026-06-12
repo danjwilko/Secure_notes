@@ -191,17 +191,17 @@ Test coverage includes:
 
 The `docs/` folder contains working implementation notes and security-related development writeups created during the build process. Some documents are still being expanded and refined as the project evolves.
 
-- [`docs/jwt-implementation.md`](docs/jwt-implementation.md) — JWT design decisions and token lifecycle
-- [`docs/api-throttling.md`](docs/api-throttling.md) — throttling approach and configuration
-- [`docs/markdown-sanitisation.md`](docs/markdown-sanitisation.md) — Bleach allowlist approach and XSS prevention
-- [`docs/application-hardening.md`](docs/application-hardening.md) — queryset filtering, IDOR prevention, and the authentication vs authorisation distinction
-- [`docs/postgres-fedora-setup.md`](docs/postgres-fedora-setup.md) — PostgreSQL setup walkthrough for Fedora
+- [`docs/jwt-implementation.md`](docs/jwt-implementation.md) - JWT design decisions and token lifecycle
+- [`docs/api-throttling.md`](docs/api-throttling.md) - Throttling approach and configuration
+- [`docs/markdown-sanitisation.md`](docs/markdown-sanitisation.md) Bleach allowlist approach and XSS prevention
+- [`docs/application-hardening.md`](docs/application-hardening.md) - Queryset filtering, IDOR prevention, and the authentication vs authorisation distinction
+- [`docs/postgres-fedora-setup.md`](docs/postgres-fedora-setup.md) - PostgreSQL setup walkthrough for Fedora
 
 ---
 
 ## Roadmap
 
-### Current focus (Phase 1 — portfolio polish)
+### Current focus (Phase 1 - portfolio polish)
 
 - README and architecture documentation
 - Production security settings review
@@ -209,9 +209,8 @@ The `docs/` folder contains working implementation notes and security-related de
 - End-to-end golden path test
 - `.env.example` and project hygiene
 
-### Next (Phase 2 — feature expansion)
+### Next (Phase 2 - feature expansion)
 
-- Full-text search
 - Tags and categories
 - Export (JSON and Markdown)
 - Toast notifications and UX improvements
