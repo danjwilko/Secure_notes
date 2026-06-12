@@ -78,6 +78,29 @@ Notes are always scoped to the authenticated user through queryset filtering and
 
 ---
 
+## Deployment
+
+The application is deployed to Railway and uses PostgreSQL as the production database.
+
+### Production stack
+
+- Railway
+- PostgreSQL
+- Gunicorn
+- WhiteNoise
+- Environment-based configuration
+
+### Production configuration
+
+- `DEBUG=False`
+- Environment-managed secrets
+- PostgreSQL database backend
+- Static asset serving via WhiteNoise
+- CSRF trusted origins configured
+- Secure cookie and host configuration
+
+The live deployment is intended for demonstration and portfolio purposes.
+
 ## Running locally
 
 Clone the repository:
@@ -248,4 +271,6 @@ The `docs/` folder contains working implementation notes and security-related de
 
 ## Disclaimer
 
-This project is a learning and portfolio project focused on backend engineering and security-oriented development. It is not intended for production use without additional deployment hardening and operational review.
+This project was built as a learning and portfolio project focused on backend engineering and security-oriented development.
+
+While deployed publicly for demonstration purposes, it has not undergone a formal security review and should not be considered suitable for storing sensitive real-world information.
