@@ -5,6 +5,13 @@ A security-focused Django web application for creating and managing personal not
 The project was built to explore backend engineering and security-focused development practices using Django and Django REST Framework, with a focus on authentication, access control, API security, encryption-at-rest, testing and production-aware configuration.
 
 ---
+## Live Demo
+
+https://securenotes-production.up.railway.app
+
+> Note: This application is a portfolio and learning project. Do not store sensitive real-world information.
+
+---
 
 ## Architecture overview
 
@@ -26,6 +33,8 @@ Notes are always scoped to the authenticated user through queryset filtering and
 ### Core application
 
 - User registration, authentication and session management
+- Password change and password reset workflows
+- Account deletion
 - Create, edit and delete personal notes
 - Markdown rendering with sanitisation
 - Responsive Bootstrap UI
@@ -40,15 +49,18 @@ Notes are always scoped to the authenticated user through queryset filtering and
 
 ### Security
 
-- Field level encryption at rest using Fernet (note content encrypted in the database)
+- Field-level encryption at rest using Fernet
 - Encryption key material derived from `SECRET_KEY` and `SALT_KEY`
-- User scoped queryset filtering (users can only access their own notes)
-- Owner automatically assigned on creation (not trusted from client input)
-- JWT access tokens short-lived (5 minutes); refresh tokens rotate on use and are blacklisted after rotation
-- API throttling on authentication and general endpoints
-- Markdown sanitisation via Bleach to reduce XSS risk from user content
+- User-scoped queryset filtering
+- Owner automatically assigned on creation
+- JWT access tokens short-lived (5 minutes)
+- Refresh token rotation and blacklisting
+- API throttling on authentication and API endpoints
+- Markdown sanitisation via Bleach
 - Database uniqueness constraints per user
-- Environment variable configuration via `.env`
+- CSRF protection for session-authenticated views
+- Environment-variable based secret management
+- Production-aware settings separation
 
 ---
 
@@ -176,14 +188,16 @@ Test coverage includes:
 - Invalid and expired token handling
 - CRUD operations via API
 - Ownership isolation (users cannot access other users' notes)
-- Permission and access control edge cases
+- Permission and access control
 - Partial update (PATCH) behaviour
 - Duplicate title validation per user
 - Cross-user same-title isolation
 - Malformed request handling
 - Large input handling
-- Markdown rendering
+- Markdown rendering and sanitisation
 - API throttling
+- Password change workflow
+- Password reset workflow
 
 ---
 
@@ -201,33 +215,34 @@ The `docs/` folder contains working implementation notes and security-related de
 
 ## Roadmap
 
-### Current focus (Phase 1 - portfolio polish)
+### Phase 1 Final polish
 
-- README and architecture documentation
-- Production security settings review
-- Security headers
-- End-to-end golden path test
-- `.env.example` and project hygiene
+- Structured audit logging
+- Consistent exception handling
+- Security header review
+- End-to-end integration testing
+- Documentation improvements
 
-### Next (Phase 2 - feature expansion)
+### Phase 2 - Features and expansion
 
 - Tags and categories
+- Search functionality
 - Export (JSON and Markdown)
-- Toast notifications and UX improvements
+- UX improvements and notifications
 
-### Engineering depth (Phase 3)
+### Phase 3 - Engineering Depth
 
-- Audit logging (login, note events, failed auth)
-- CI/CD via GitHub Actions
+- CI/CD with GitHub Actions
 - Docker and docker-compose
-- Production deployment
+- Automated deployment pipeline
+- Monitoring and health checks
 
-### Research track (Phase 4)
+### Phase 4 - Advanced security research
 
 - KEK/DEK encryption architecture exploration
-- Zero-knowledge prototype with WebCrypto and Argon2id
-- Client-side encryption research
-- Separate frontend (React or Svelte)
+- Client-side encryption prototype
+- Zero-knowledge architecture research 
+- Separate React/Svelte frontend
 
 ---
 
