@@ -2,7 +2,7 @@
 
 A security-focused Django web application for creating and managing personal notes.
 
-The project was built to explore backend engineering and security-focused development practices using Django and Django REST Framework, with a focus on authentication, access control, API security, encryption-at-rest, testing, and production-aware configuration.
+The project was built to explore backend engineering and security-focused development practices using Django and Django REST Framework, with a focus on authentication, access control, API security, encryption-at-rest, testing and production-aware configuration.
 
 ---
 
@@ -25,8 +25,8 @@ Notes are always scoped to the authenticated user through queryset filtering and
 
 ### Core application
 
-- User registration, authentication, and session management
-- Create, edit, and delete personal notes
+- User registration, authentication and session management
+- Create, edit and delete personal notes
 - Markdown rendering with sanitisation
 - Responsive Bootstrap UI
 
@@ -34,16 +34,16 @@ Notes are always scoped to the authenticated user through queryset filtering and
 
 - Full REST API via Django REST Framework
 - JWT authentication with refresh token rotation and blacklisting
-- Owner-scoped queryset filtering on all endpoints
+- Owner scoped queryset filtering on all endpoints
 - Pagination and partial update (PATCH) support
 - OpenAPI schema generation and interactive Swagger documentation
 
 ### Security
 
-- Field-level encryption at rest using Fernet (note content encrypted in the database)
+- Field level encryption at rest using Fernet (note content encrypted in the database)
 - Encryption key material derived from `SECRET_KEY` and `SALT_KEY`
-- User-scoped queryset filtering — users can only access their own notes
-- Owner automatically assigned on creation — not trusted from client input
+- User scoped queryset filtering (users can only access their own notes)
+- Owner automatically assigned on creation (not trusted from client input)
 - JWT access tokens short-lived (5 minutes); refresh tokens rotate on use and are blacklisted after rotation
 - API throttling on authentication and general endpoints
 - Markdown sanitisation via Bleach to reduce XSS risk from user content
@@ -175,7 +175,7 @@ Test coverage includes:
 - JWT authentication and token lifecycle
 - Invalid and expired token handling
 - CRUD operations via API
-- Ownership isolation — users cannot access other users' notes
+- Ownership isolation (users cannot access other users' notes)
 - Permission and access control edge cases
 - Partial update (PATCH) behaviour
 - Duplicate title validation per user
