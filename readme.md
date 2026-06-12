@@ -2,9 +2,16 @@
 
 A security-focused Django web application for creating and managing personal notes.
 
-The project was built to explore backend engineering and security-focused development practices using Django and Django REST Framework, with a focus on authentication, access control, API security, encryption-at-rest, testing and production-aware configuration.
+## Why This Project?
 
----
+Secure Notes began as a personal learning project to explore backend engineering and security-focused development using Django.
+
+The goal was to create something small and practical that could be used to develop my Python and Django knowledge, while also becoming a genuinely useful application as the project evolved. A notes application filled that role well, as it was usable from almost day one.
+
+The project follows a “do a few things well” philosophy. Rather than continuously adding features, the focus has been on improving architecture, security, testing and deployment while keeping the application simple enough to fully understand and reason about.
+
+As a result, Secure Notes now serves both as a useful personal application and as a portfolio project demonstrating backend engineering and secure-by-design development principles.
+
 ## Live Demo
 
 https://securenotes-production.up.railway.app
