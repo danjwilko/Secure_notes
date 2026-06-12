@@ -149,7 +149,7 @@ Run the development server:
 python manage.py runserver
 ```
 
-> **Note:** PostgreSQL is required. See [`docs/postgres-fedora-setup.md`](docs/postgres-fedora-setup.md) for a full setup walkthrough including common errors.
+> **Note:** PostgreSQL is required.
 
 ---
 
@@ -221,18 +221,6 @@ Test coverage includes:
 - API throttling
 - Password change workflow
 - Password reset workflow
-
----
-
-## Development and Security notes
-
-The `docs/` folder contains working implementation notes and security-related development writeups created during the build process. Some documents are still being expanded and refined as the project evolves.
-
-- [`docs/jwt-implementation.md`](docs/jwt-implementation.md) - JWT design decisions and token lifecycle
-- [`docs/api-throttling.md`](docs/api-throttling.md) - Throttling approach and configuration
-- [`docs/markdown-sanitisation.md`](docs/markdown-sanitisation.md) Bleach allowlist approach and XSS prevention
-- [`docs/application-hardening.md`](docs/application-hardening.md) - Queryset filtering, IDOR prevention, and the authentication vs authorisation distinction
-- [`docs/postgres-fedora-setup.md`](docs/postgres-fedora-setup.md) - PostgreSQL setup walkthrough for Fedora
 
 ---
 
