@@ -2,9 +2,16 @@
 
 A security-focused Django web application for creating and managing personal notes.
 
-The project was built to explore backend engineering and security-focused development practices using Django and Django REST Framework, with a focus on authentication, access control, API security, encryption-at-rest, testing and production-aware configuration.
+## Why This Project?
 
----
+Secure Notes began as a personal learning project to explore backend engineering and security-focused development using Django.
+
+The goal was to create something small and practical that could be used to develop my Python and Django knowledge, while also becoming a genuinely useful application as the project evolved. A notes application filled that role well, as it was usable from almost day one.
+
+The project follows a “do a few things well” philosophy. Rather than continuously adding features, the focus has been on improving architecture, security, testing and deployment while keeping the application simple enough to fully understand and reason about.
+
+As a result, Secure Notes now serves both as a useful personal application and as a portfolio project demonstrating backend engineering and secure-by-design development principles.
+
 ## Live Demo
 
 https://securenotes-production.up.railway.app
@@ -149,7 +156,7 @@ Run the development server:
 python manage.py runserver
 ```
 
-> **Note:** PostgreSQL is required. See [`docs/postgres-fedora-setup.md`](docs/postgres-fedora-setup.md) for a full setup walkthrough including common errors.
+> **Note:** PostgreSQL is required.
 
 ---
 
@@ -221,18 +228,6 @@ Test coverage includes:
 - API throttling
 - Password change workflow
 - Password reset workflow
-
----
-
-## Development and Security notes
-
-The `docs/` folder contains working implementation notes and security-related development writeups created during the build process. Some documents are still being expanded and refined as the project evolves.
-
-- [`docs/jwt-implementation.md`](docs/jwt-implementation.md) - JWT design decisions and token lifecycle
-- [`docs/api-throttling.md`](docs/api-throttling.md) - Throttling approach and configuration
-- [`docs/markdown-sanitisation.md`](docs/markdown-sanitisation.md) Bleach allowlist approach and XSS prevention
-- [`docs/application-hardening.md`](docs/application-hardening.md) - Queryset filtering, IDOR prevention, and the authentication vs authorisation distinction
-- [`docs/postgres-fedora-setup.md`](docs/postgres-fedora-setup.md) - PostgreSQL setup walkthrough for Fedora
 
 ---
 
