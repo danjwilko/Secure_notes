@@ -14,13 +14,13 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-import dj_database_url
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# Load environment variables from .env file
+# Load environment variables from .env during development.
+# In production, Railway provides environment variables directly.
 # commented out as per railway reccomendation.
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
@@ -33,15 +33,6 @@ if not SECRET_KEY:
 
 if not SALT_KEY:
     raise RuntimeError("SALT_KEY is not set")
-
-DEBUG = os.getenv("DEBUG", "False").lower() == "true"
-
-ALLOWED_HOSTS = [
-    host.strip()
-    for host in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
-]
-if not DEBUG:
-    ALLOWED_HOSTS.extend(["securenotes-production.up.railway.app"])
 
 # Optional security settings from environment variables
 SESSION_COOKIE_HTTPONLY = (
@@ -58,19 +49,6 @@ EMAIL_BACKEND = os.getenv(
 )
 
 SECURE_REFERRER_POLICY = "same-origin"
-
-
-if not DEBUG:
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = False  # Railway handles SSL termination, so we don't
-    # enable this in Django.
-    CSRF_TRUSTED_ORIGINS = ["https://securenotes-production.up.railway.app"]
-
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -244,23 +222,3 @@ LOGIN_REDIRECT_URL = "secure_notes:dashboard"
 LOGOUT_REDIRECT_URL = "secure_notes:index"
 LOGIN_URL = "accounts:login"
 
-
-if DEBUG:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ.get("DB_NAME"),
-            "USER": os.environ.get("DB_USER"),
-            "PASSWORD": os.environ.get("DB_PASSWORD"),
-            "HOST": os.environ.get("DB_HOST", "localhost"),
-            "PORT": os.environ.get("DB_PORT", "5432"),
-        }
-    }
-else:
-    DATABASES = {
-        "default": dj_database_url.config(
-            default=os.getenv("DATABASE_URL"),
-            conn_max_age=600,
-            ssl_require=True,
-        )
-    }
