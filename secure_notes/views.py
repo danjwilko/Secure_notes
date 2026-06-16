@@ -125,7 +125,7 @@ def delete_note(request, note_id):
 
     if request.method == "POST":
         note.delete()
-        logger.warning()(
+        logger.warning(
             "Note deleted user=%s note_id=%s", request.user.username, note.id
         )
         return redirect("secure_notes:notes")
