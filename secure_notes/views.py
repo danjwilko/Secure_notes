@@ -105,7 +105,7 @@ def edit_note(request, note_id):
         form = NoteForm(instance=note, data=request.POST, user=request.user)
         if form.is_valid():
             form.save()
-            logger.info()(
+            logger.info(
                 "Note edited user=%s note_id=%s",
                 request.user.username,
                 note.id,
@@ -124,10 +124,10 @@ def delete_note(request, note_id):
     note = get_user_note_or_404(request, note_id)
 
     if request.method == "POST":
-        note.delete()
-        logger.warning(
+        logger.info(
             "Note deleted user=%s note_id=%s", request.user.username, note.id
         )
+        note.delete()
         return redirect("secure_notes:notes")
 
     context = {"note": note}
