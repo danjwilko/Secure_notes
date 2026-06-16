@@ -5,5 +5,7 @@ from .views import PrivacyPolicyView
 app_name = "legal"
 
 urlpatterns = [
-    path("privacy-policy/", PrivacyPolicyView.as_view(), name="privacy_policy"),
+    path(
+        "privacy-policy/", PrivacyPolicyView.as_view(), name="privacy_policy"
+    ),
 ]

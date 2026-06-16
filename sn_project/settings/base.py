@@ -21,7 +21,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Load environment variables from .env during development.
 # In production, Railway provides environment variables directly.
-# commented out as per railway reccomendation.
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # Use environment variables
@@ -221,4 +220,3 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 LOGIN_REDIRECT_URL = "secure_notes:dashboard"
 LOGOUT_REDIRECT_URL = "secure_notes:index"
 LOGIN_URL = "accounts:login"
-

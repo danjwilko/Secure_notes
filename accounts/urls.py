@@ -1,7 +1,7 @@
 """Defines the URL patterns for the accounts app."""
 
 from django.contrib.auth import views as auth_views
-from django.urls import include, path
+from django.urls import path
 
 from . import views
 
@@ -10,7 +10,7 @@ urlpatterns = [
     # Registaration page.
     path("register/", views.register, name="register"),
     # Default auth urls for login and logout.
-    #Login
+    # Login
     path("login/", auth_views.LoginView.as_view(), name="login"),
     # Logout
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),

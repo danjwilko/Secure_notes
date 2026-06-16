@@ -1,9 +1,13 @@
+import logging
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import NoteForm
 from .models import Note
 from .utils import render_markdown
+
+logger = logging.getLogger(__name__)
 
 
 def user_notes_qs(request):
@@ -23,6 +27,7 @@ def index(request):
     if request.user.is_authenticated:
         return redirect("secure_notes:notes")
     return render(request, "secure_notes/index.html")
+
 
 @login_required
 def dashboard(request):
@@ -75,6 +80,11 @@ def create_note(request):
             new_note.owner = request.user
             # Save the note to the database.
             new_note.save()
+            logger.info(
+                "Note created user=%s note_id=%s",
+                request.user.username,
+                new_note.id,
+            )
             return redirect("secure_notes:notes")
     # Display a blank form for creating a new note.
     context = {"form": form}
@@ -95,6 +105,11 @@ def edit_note(request, note_id):
         form = NoteForm(instance=note, data=request.POST, user=request.user)
         if form.is_valid():
             form.save()
+            logger.info()(
+                "Note edited user=%s note_id=%s",
+                request.user.username,
+                note.id,
+            )
             return redirect("secure_notes:note_detail", note_id=note.id)
 
     context = {"form": form, "note": note}
@@ -110,6 +125,9 @@ def delete_note(request, note_id):
 
     if request.method == "POST":
         note.delete()
+        logger.warning()(
+            "Note deleted user=%s note_id=%s", request.user.username, note.id
+        )
         return redirect("secure_notes:notes")
 
     context = {"note": note}

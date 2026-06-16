@@ -20,9 +20,10 @@ class SecureUserCreationForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data.get("email").lower()
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("A user with that email already exists.")
+            raise forms.ValidationError(
+                "A user with that email already exists."
+            )
         return email
-
 
 
 class ReauthenticateForm(forms.Form):
