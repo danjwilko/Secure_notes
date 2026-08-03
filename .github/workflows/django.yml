@@ -28,5 +28,6 @@ jobs:
     - name: Run Tests
       env:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        SALT_KEY: ${{ secrets.SALT_KEY }}
       run: |
         python manage.py test
