@@ -6,6 +6,8 @@
 
 # Django
 db.sqlite3
+/staticfiles/
+/media/
 
 # Pytest
 .pytest_cache/
@@ -13,8 +15,10 @@ db.sqlite3
 # Virtual environment
 sn_env/
 venv/
+
+# Environment configuration
 .env
-!.env.example # Keep the example env file in version control, but ignore the actual .env with secrets
+!.env.example
 
 # IDEs
 .vscode/
