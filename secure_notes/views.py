@@ -60,7 +60,7 @@ def note_detail(request, note_id):
     try:
         content = note.content
         rendered_content = render_markdown(content)
-    except Exception:   
+    except Exception:
         logger.exception(
             "Error rendering markdown for note_id=%s user=%s",
             note.id,
