@@ -85,7 +85,7 @@ class CustomPasswordResetView(PasswordResetView):
 
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):
-    """Displays confirmation that apassword reset email has been sent."""
+    """Displays confirmation that a password reset email has been sent."""
 
     template_name = "registration/password_reset_done.html"
 

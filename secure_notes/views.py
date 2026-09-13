@@ -57,9 +57,21 @@ def note_detail(request, note_id):
     """View function to display the details of a specific note."""
     # Fetch the note by ID and ensure it belongs to the current user.
     note = get_user_note_or_404(request, note_id)
+    try:
+        content = note.content
+        rendered_content = render_markdown(content)
+    except Exception:   
+        logger.exception(
+            "Error rendering markdown for note_id=%s user=%s",
+            note.id,
+            request.user.id,
+        )
+        rendered_content = (
+            "<p><em>This note could not be displayed</em></p>"
+        )
     context = {
         "note": note,
-        "rendered_content": render_markdown(note.content),
+        "rendered_content": rendered_content,
     }
 
     return render(request, "secure_notes/note_detail.html", context)
@@ -124,7 +136,7 @@ def delete_note(request, note_id):
     note = get_user_note_or_404(request, note_id)
 
     if request.method == "POST":
-        logger.info(
+        logger.warning(
             "Note deleted user=%s note_id=%s", request.user.username, note.id
         )
         note.delete()
