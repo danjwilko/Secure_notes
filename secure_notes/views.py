@@ -66,9 +66,7 @@ def note_detail(request, note_id):
             note.id,
             request.user.id,
         )
-        rendered_content = (
-            "<p><em>This note could not be displayed</em></p>"
-        )
+        rendered_content = "<p><em>This note could not be displayed</em></p>"
     context = {
         "note": note,
         "rendered_content": rendered_content,

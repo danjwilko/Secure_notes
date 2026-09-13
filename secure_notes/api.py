@@ -6,14 +6,15 @@ from .serializers import NoteSerializer
 
 
 class NoteViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Note model."""
+    """ViewSet for the Note model,
+    providing CRUD operations for authenticated users."""
 
-    queryset = Note.objects.all()  # This will be overridden by get_queryset
+    queryset = Note.objects.none()
     serializer_class = NoteSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        """Return notes for the current authenticated user only."""
+        """Return notes belonging to the authenticated user only."""
         return Note.objects.filter(owner=self.request.user)
 
     def perform_create(self, serializer):

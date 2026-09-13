@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import (
+    LoginView,
     PasswordChangeDoneView,
     PasswordChangeView,
     PasswordResetCompleteView,
@@ -14,6 +15,8 @@ from django.contrib.auth.views import (
 )
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django_ratelimit.decorators import ratelimit
 
 from .forms import ReauthenticateForm, SecureUserCreationForm
 
@@ -34,6 +37,7 @@ def mask_email(email):
     return f"[{masked_name}@{domain}]"
 
 
+@ratelimit(key="ip", rate="5/h", method="POST", block=True)
 def register(request):
     """View function to handle user registration."""
     if request.method != "POST":
@@ -58,7 +62,25 @@ def register(request):
     return render(request, "registration/register.html", context)
 
 
+@method_decorator(
+    ratelimit(key="ip", rate="5/m", method="POST", block=True), name="dispatch"
+)
+@method_decorator(
+    ratelimit(key="post:username", rate="5/m", method="POST", block=True),
+    name="dispatch",
+)
+class CustomLoginView(LoginView):
+    """Custom login view that applies rate limiting
+    to prevent brute-force attacks."""
+
+    template_name = "registration/login.html"
+
+
 # User requests password reset flow.
+@method_decorator(
+    ratelimit(key="post:email", rate="5/h", method="POST", block=True),
+    name="dispatch",
+)
 class CustomPasswordResetView(PasswordResetView):
     """Handles the password reset email requests."""
 
@@ -110,6 +132,10 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 
 
 # User requests password change flow.
+@method_decorator(
+    ratelimit(key="user", rate="5/h", method="POST", block=True),
+    name="dispatch",
+)
 class CustomChangePasswordView(LoginRequiredMixin, PasswordChangeView):
     """Handles the password changes for logged in users."""
 
@@ -131,6 +157,7 @@ class CustomChangePasswordDoneView(LoginRequiredMixin, PasswordChangeDoneView):
 
 
 @login_required
+@ratelimit(key="user", rate="2/h", method="POST", block=True)
 def delete_account(request):
     """View function to handle account deletion."""
 
@@ -144,14 +171,14 @@ def delete_account(request):
 
             if user is not None and user == request.user:
                 username = user.username
-                user_id = user.id
+                user_id = user.pk
+                logout(request)
+                user.delete()
                 logger.warning(
                     "User account deleted username=%s user_id=%s",
                     username,
                     user_id,
                 )
-                logout(request)
-                user.delete()
 
                 return redirect("accounts:login")
 
