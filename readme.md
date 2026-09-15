@@ -68,6 +68,8 @@ Notes are always scoped to the authenticated user through queryset filtering and
 - CSRF protection for session-authenticated views
 - Environment-variable based secret management
 - Production-aware settings separation
+- IP-based rate limiting on login, registration, password reset, password change, and account deletion
+- Audit logging across all auth events and note operations
 
 ---
 
@@ -81,7 +83,9 @@ Notes are always scoped to the authenticated user through queryset filtering and
 | Sanitisation | Bleach |
 | API documentation | drf-spectacular, OpenAPI/Swagger |
 | Database | PostgreSQL |
-| Testing | Pytest, pytest-django |
+| Testing | Pytest, pytest-django , 25 tests |
+| Rate-limiting | django-ratelimit |
+| CI/CD | GitHub Actions |
 
 ---
 
@@ -233,9 +237,16 @@ Test coverage includes:
 
 ## Roadmap
 
+### Completed
+
+- Structured audit logging with email masking
+- IP-based rate limiting on all auth and sensitive endpoints
+- Dev/production settings separation
+- CI/CD with GitHub Actions, PostgreSQL service container, and automated Railway deployment
+- 25 passing tests
+
 ### Phase 1 Final polish
 
-- Structured audit logging
 - Consistent exception handling
 - Security header review
 - End-to-end integration testing
@@ -247,12 +258,11 @@ Test coverage includes:
 - Search functionality
 - Export (JSON and Markdown)
 - UX improvements and notifications
+- Light and Dark mode toggle
 
 ### Phase 3 - Engineering Depth
 
-- CI/CD with GitHub Actions
 - Docker and docker-compose
-- Automated deployment pipeline
 - Monitoring and health checks
 
 ### Phase 4 - Advanced security research
