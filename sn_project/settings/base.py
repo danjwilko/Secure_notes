@@ -37,9 +37,6 @@ if not SALT_KEY:
 SESSION_COOKIE_HTTPONLY = (
     os.getenv("SESSION_COOKIE_HTTPONLY", "True").lower() == "true"
 )
-SECURE_BROWSER_XSS_FILTER = (
-    os.getenv("SECURE_BROWSER_XSS_FILTER", "True").lower() == "true"
-)
 SECURE_CONTENT_TYPE_NOSNIFF = (
     os.getenv("SECURE_CONTENT_TYPE_NOSNIFF", "True").lower() == "true"
 )
@@ -60,12 +57,14 @@ INSTALLED_APPS = [
     "accounts",
     "legal",
     # Third-party apps.
+    "anymail",
     "django_bootstrap5",
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "drf_spectacular",
     "drf_spectacular_sidecar",
+    "resend",
     # Default Django apps.
     "django.contrib.admin",
     "django.contrib.auth",
@@ -98,6 +97,8 @@ REST_FRAMEWORK = {
         "user": "100/day",  # Limit authenticated users to 100 requests per day
         "anon": "20/day",  # Limit unauthenticated users to 20 requests per day
         "login": "5/minute",  # Limit login attempts to 5 per minute
+        "reset_password": "5/hour",
+        # Limit password reset requests to 5 per hour
     },
 }
 
@@ -214,7 +215,16 @@ STATIC_URL = "/static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": (
+            "whitenoise.storage.CompressedManifestStaticFilesStorage"
+        ),
+    },
+}
 
 # My Settings.
 LOGIN_REDIRECT_URL = "secure_notes:dashboard"

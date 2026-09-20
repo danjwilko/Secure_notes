@@ -1,4 +1,5 @@
 import os
+import resend
 
 from .base import *
 
@@ -16,3 +17,5 @@ DATABASES = {
         "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
