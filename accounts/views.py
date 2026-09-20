@@ -85,7 +85,8 @@ class CustomPasswordResetView(PasswordResetView):
     """Handles the password reset email requests."""
 
     template_name = "registration/password_reset.html"
-    email_template_name = "registration/password_reset_email.html"
+    email_template_name = "registration/password_reset_email.txt"
+    html_email_template_name = "registration/password_reset_email.html"
     subject_template_name = "registration/password_reset_subject.txt"
     success_url = reverse_lazy("accounts:password_reset_done")
 
