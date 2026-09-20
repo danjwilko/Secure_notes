@@ -215,6 +215,8 @@ STATIC_URL = "/static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+PASSWORD_RESET_TIMEOUT = 15 * 60
+
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
