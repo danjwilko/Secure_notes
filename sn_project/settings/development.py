@@ -1,5 +1,4 @@
 import os
-import resend
 
 from .base import *
 

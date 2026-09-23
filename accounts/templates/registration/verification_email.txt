@@ -1,0 +1,17 @@
+{% load i18n %}{% autoescape off %}
+
+{% translate "Thank you for registering for a Secure Notes account." %}
+
+{% translate "Please verify your email address to activate your account." %}
+
+{% translate "Verify your email address using this link:" %}
+
+{{ verify_url }}
+
+{% translate "This link expires in 24 hours." %}
+
+{% translate "If you didn't create this account, you can ignore this email." %}
+
+{% translate "The Secure Notes team" %}
+
+{% endautoescape %}

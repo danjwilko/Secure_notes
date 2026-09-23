@@ -4,6 +4,15 @@ import dj_database_url
 
 from .base import *
 
+MIDDLEWARE.insert(
+    1,
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+)
+
+STORAGES["staticfiles"] = {
+    "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+}
+
 DEBUG = False
 
 ALLOWED_HOSTS = [

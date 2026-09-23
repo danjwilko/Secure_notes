@@ -1,0 +1,27 @@
+{% load i18n %}
+<!doctype html>
+<html lang="en">
+<body>
+  <p>
+    {% translate "Thank you for registering for a Secure Notes account." %}
+  </p>
+
+  <p>
+    {% translate "Please verify your email address to activate your account." %}
+  </p>
+
+  <p>
+    <a href="{{ verify_url }}">
+      {% translate "Verify your email address" %}
+    </a>
+  </p>
+
+  <p>{% translate "This link expires in 24 hours." %}</p>
+
+  <p>
+    {% translate "If you didn't create this account, you can ignore this email." %}
+  </p>
+
+  <p>{% translate "The Secure Notes team" %}</p>
+</body>
+</html>

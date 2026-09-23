@@ -1,0 +1,27 @@
+{% extends "secure_notes/base.html" %}
+
+{% block page_header %}
+  <h2 class="h2">Verification link expired</h2>
+  <hr>
+{% endblock page_header %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-10 col-lg-8">
+        <div class="card shadow-sm mb-3">
+          <div class="card-body">
+            <div class="alert alert-warning" role="alert">
+              <h3 class="h5 alert-heading">This link has expired</h3>
+
+              <p class="mb-0">
+                This verification link is no longer valid. You will need to
+                request a new verification email before you can log in.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

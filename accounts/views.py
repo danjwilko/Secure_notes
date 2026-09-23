@@ -13,11 +13,13 @@ from django.contrib.auth.views import (
     PasswordResetDoneView,
     PasswordResetView,
 )
+from django.core import signing
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django_ratelimit.decorators import ratelimit
+from django_ratelimit.decorators import ratelimit, settings
 
+from .email import VERIFY_EMAIL_SALT, send_verification_email
 from .forms import ReauthenticateForm, SecureUserCreationForm
 
 logger = logging.getLogger(__name__)
@@ -39,27 +41,81 @@ def mask_email(email):
 
 @ratelimit(key="ip", rate="5/h", method="POST", block=True)
 def register(request):
-    """View function to handle user registration."""
+    """View function to handle user registration, initially set as
+    an inactive user and an email verification link is sent"""
+
     if request.method != "POST":
         # Display a blank registration form.
         form = SecureUserCreationForm()
+
     else:
-        # Process the submitted form data.
+        # Process the data - send a link to the users inputted email,
+        # set as iactive.
         form = SecureUserCreationForm(request.POST)
         if form.is_valid():
-            new_user = form.save()
-            logger.info("New user registered: %s", new_user.username)
-            # Log the user in and redirect to the home page.
-            login(request, new_user)
+            new_user = form.save(commit=False)
+            new_user.email = new_user.email.strip().lower()
+            new_user.is_active = False
+            new_user.save()
+
             logger.info(
-                "User logged in after registration: %s", new_user.username
+                "Inactive user ID %s registered and awaits email verification",
+                new_user.pk,
             )
-            return redirect("secure_notes:index")
+
+            email_sent = send_verification_email(
+                request,
+                new_user
+                )
+            if not email_sent:
+                logger.warning(
+                    "Verification email could not be sent to the user ID %s",
+                    new_user.pk,
+                )
+
+            return redirect("accounts:verification_sent")
 
     # Display a blank or invalid form.
     context = {"form": form}
 
     return render(request, "registration/register.html", context)
+
+
+User = get_user_model()
+
+
+def verify_email(request, token):
+    try:
+        user_pk = signing.loads(
+            token,
+            salt=VERIFY_EMAIL_SALT,
+            max_age=settings.EMAIL_VERIFICATION_TIMEOUT,
+        )
+
+    except signing.SignatureExpired:
+        return redirect("accounts:verification_expired")
+
+    except signing.BadSignature:
+        return redirect("accounts:verification_invalid")
+
+    try:
+        user = User.objects.get(pk=user_pk)
+    except (User.DoesNotExist, TypeError, ValueError):
+        return redirect("accounts:verification_invalid")
+
+    if user.is_active:
+        return redirect("accounts:verification_complete")
+
+    user.is_active = True
+    user.save(update_fields=["is_active"])
+
+    logger.info(
+        "User ID %s completed email verification",
+        user_pk,
+    )
+
+    return redirect("accounts:verification_complete")
+
 
 
 @method_decorator(
