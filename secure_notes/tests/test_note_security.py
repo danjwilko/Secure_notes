@@ -84,5 +84,3 @@ def test_markdown_sanitises_unsafe_links_and_image_attributes(client, user):
     assert "onload" not in content
     assert "Click me" in content
     assert "Raw link" in content
-
-

@@ -1,6 +1,6 @@
 import logging
 
-from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth import authenticate, get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -63,10 +63,7 @@ def register(request):
                 new_user.pk,
             )
 
-            email_sent = send_verification_email(
-                request,
-                new_user
-                )
+            email_sent = send_verification_email(request, new_user)
             if not email_sent:
                 logger.warning(
                     "Verification email could not be sent to the user ID %s",
@@ -115,7 +112,6 @@ def verify_email(request, token):
     )
 
     return redirect("accounts:verification_complete")
-
 
 
 @method_decorator(

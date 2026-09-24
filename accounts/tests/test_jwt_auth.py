@@ -5,6 +5,7 @@ from rest_framework.test import APIClient
 
 NOTES_URL = "/api/notes/"
 
+
 # Tests to ensure that invalid tokens cannot access the notes API.
 @pytest.mark.django_db
 def test_invalid_token_cannot_access_notes():
@@ -12,6 +13,7 @@ def test_invalid_token_cannot_access_notes():
     client.credentials(HTTP_AUTHORIZATION="Bearer invalidtoken")
     response = client.get(NOTES_URL)
     assert response.status_code in (403, 401)
+
 
 @pytest.mark.django_db
 def test_token_refresh_endpoint_is_throttled(settings):

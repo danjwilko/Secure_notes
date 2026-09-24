@@ -5,6 +5,7 @@ from rest_framework.test import APIClient
 User = get_user_model()
 NOTES_URL = "/api/notes/"
 
+
 # Tests for creating, updating, and deleting notes.
 @pytest.mark.django_db
 def test_create_note_api(user, api_client):
@@ -161,6 +162,7 @@ def test_same_title_different_users(user, api_client):
 
     assert response.status_code == 201
 
+
 @pytest.mark.django_db
 def test_malformed_note_request_returns_400(user, api_client):
     client = api_client(user)
@@ -188,6 +190,7 @@ def test_large_note_content(user, api_client):
 
     assert response.status_code == 201
     assert response.data["content"] == large_content
+
 
 @pytest.mark.django_db
 def test_notes_api_is_throttled_for_authenticated_users(
@@ -328,5 +331,3 @@ def test_user_cannot_delete_another_users_note(user, api_client):
 
     response = client_b.delete(f"{NOTES_URL}{note_id}/")
     assert response.status_code == 404
-
-

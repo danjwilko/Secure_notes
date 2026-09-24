@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 VERIFY_EMAIL_SALT = "accounts.email-verification.v1"
 
+
 def send_verification_email(request, user):
     """Send an email to the user to verify their
     email address. before completing registration."""
@@ -39,15 +40,10 @@ def send_verification_email(request, user):
     )
 
     email_message = EmailMultiAlternatives(
-        subject,
-        body,
-        from_email,
-        [to_email]
+        subject, body, from_email, [to_email]
     )
     if html_content is not None:
-        email_message.attach_alternative(
-            html_content,
-            "text/html")
+        email_message.attach_alternative(html_content, "text/html")
 
     try:
         return bool(email_message.send())
@@ -55,5 +51,5 @@ def send_verification_email(request, user):
         logger.exception(
             "Failed to send verification email to ID %s",
             user.pk,
-            )
+        )
         return False
