@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
+from rest_framework.throttling import UserRateThrottle
 
 User = get_user_model()
 NOTES_URL = "/api/notes/"
@@ -194,9 +195,13 @@ def test_large_note_content(user, api_client):
 
 @pytest.mark.django_db
 def test_notes_api_is_throttled_for_authenticated_users(
-    user, api_client, settings
+    user, api_client, monkeypatch
 ):
-    settings.REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"]["user"] = "2/minute"
+    monkeypatch.setitem(
+        UserRateThrottle.THROTTLE_RATES,
+        "user",
+        "2/minute",
+    )
 
     client = api_client(user)
 

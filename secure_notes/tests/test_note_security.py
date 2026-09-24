@@ -58,7 +58,7 @@ def test_note_detail_sanitises_markdown_output(client, user):
 
 
 @pytest.mark.django_db
-def test_markdown_sanitises_unsafe_links_and_image_attributes(client, user):
+def test_markdown_sanitises_unsafe_links_and_removes_images(client, user):
     client.login(username="testuser", password="testpass")
 
     note = Note.objects.create(
@@ -67,9 +67,13 @@ def test_markdown_sanitises_unsafe_links_and_image_attributes(client, user):
         content="""
 [Click me](javascript:alert('xss'))
 
-![Bad image]("onerror="alert('xss'))
+<img
+    src="https://example.com/image.png"
+    onerror="alert('xss')"
+    onload="alert('xss)">
 
-<a href="javascript:alert('XSS')">Raw link</a>
+<a href="javascript:alert('XSS')">
+    Raw link</a>
 """,
     )
 
@@ -82,5 +86,9 @@ def test_markdown_sanitises_unsafe_links_and_image_attributes(client, user):
     assert "javascript:alert" not in content
     assert "onerror" not in content
     assert "onload" not in content
+    assert "<img" not in content
+    assert "example.com/image.png" not in content
+
+
     assert "Click me" in content
     assert "Raw link" in content
