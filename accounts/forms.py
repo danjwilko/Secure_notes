@@ -36,3 +36,6 @@ class ReauthenticateForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={"class": "form-control"})
     )
+
+class VerificationEmailForm(forms.Form):
+    email = forms.EmailField()

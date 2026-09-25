@@ -40,6 +40,9 @@ urlpatterns = [
         ),
         name="verification_invalid",
     ),
+    path("resend-verification/",views.resend_verification,name="resend_verification",),
+    path("request-verification/",views.request_verification,
+         name="request_verification"),
     # Default auth urls for login and logout.
     # Login
     path("login/", views.CustomLoginView.as_view(), name="login"),

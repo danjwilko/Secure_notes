@@ -13,15 +13,36 @@
           <div class="card-body">
             <div class="alert alert-danger" role="alert">
               <h3 class="h5 alert-heading">Verification unsuccessful</h3>
-
               <p class="mb-0">
-                This verification link is invalid or has been changed. Please
-                request a new verification email.
-              </p>
+              This verification link is invalid or can no longer be used.
+              Please request a new verification email.
+            </p>
+            <p class="text-body-secondary small mt-3 mb-0">
+            If an unverified account exists for this email address,
+            we'll send a new verification link.
+            </p>
+            </div>
+            <strong>Info:</strong> Please enter your email address below, and we will send you a link to reverify.
+            <hr class="mb-4">
+                <form method="post" action="{% url 'accounts:request_verification' %}">
+                {% csrf_token %}
+
+                <label for="email">Email address</label>
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    required
+                >
+                <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Send verification email
+                </button>
+              </div>
+              </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 {% endblock content %}

@@ -19,6 +19,14 @@
                 request a new verification email before you can log in.
               </p>
             </div>
+            <hr class="mb-4">
+            <form method="post" action="{% url 'accounts:resend_verification' %}">
+    {% csrf_token %}
+    <input type="hidden" name="token" value="{{ token }}">
+    <button type="submit" class="btn btn-primary">
+        Send a new verification email
+    </button>
+</form>
           </div>
         </div>
       </div>

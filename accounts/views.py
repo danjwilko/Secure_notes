@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
@@ -17,10 +18,15 @@ from django.core import signing
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django_ratelimit.decorators import ratelimit, settings
+from django.views.decorators.http import require_POST
+from django_ratelimit.decorators import ratelimit
 
 from .email import VERIFY_EMAIL_SALT, send_verification_email
-from .forms import ReauthenticateForm, SecureUserCreationForm
+from .forms import (
+    ReauthenticateForm,
+    SecureUserCreationForm,
+    VerificationEmailForm,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +56,7 @@ def register(request):
 
     else:
         # Process the data - send a link to the users inputted email,
-        # set as iactive.
+        # set the user as inactive until their email is verified.
         form = SecureUserCreationForm(request.POST)
         if form.is_valid():
             new_user = form.save(commit=False)
@@ -90,7 +96,20 @@ def verify_email(request, token):
         )
 
     except signing.SignatureExpired:
-        return redirect("accounts:verification_expired")
+        try:
+            signing.loads(
+                token,
+                salt=VERIFY_EMAIL_SALT,
+                max_age=settings.EMAIL_VERIFICATION_TIMEOUT,
+            )
+        except signing.BadSignature:
+            return redirect("accounts:verification_invalid")
+
+        return render(
+            request,
+            "registration/verification_expired.html",
+            {"token": token},
+            )
 
     except signing.BadSignature:
         return redirect("accounts:verification_invalid")
@@ -112,6 +131,84 @@ def verify_email(request, token):
     )
 
     return redirect("accounts:verification_complete")
+
+
+@require_POST
+@ratelimit(key="ip", rate="5/h", method="POST", block=True)
+def resend_verification(request):
+    token = request.POST.get("token")
+
+    try:
+        user_pk = signing.loads(
+            token,
+            salt=VERIFY_EMAIL_SALT,
+            max_age=settings.EMAIL_VERIFICATION_RESEND_TIMEOUT,
+        )
+        user = User.objects.get(pk=user_pk)
+
+    except (
+        signing.BadSignature,
+        User.DoesNotExist,
+        TypeError,
+        ValueError,
+    ):
+        return redirect("accounts:verification_invalid")
+
+    if user.is_active:
+        return redirect("accounts:verification_complete")
+
+    email_sent = send_verification_email(request, user)
+
+    if not email_sent:
+        logger.warning(
+            "Verification email could not be resent to the user ID %s",
+            user_pk)
+
+    return redirect("accounts:verification_sent")
+
+@ratelimit(key="ip", rate="5/h", method="POST", block=True)
+@ratelimit(key="post:email", rate="3/h", method="POST", block=True)
+def request_verification(request):
+    """Allow an unverified user to request a new verification email."""
+
+    if request.method == "POST":
+        form = VerificationEmailForm(request.POST)
+
+        if form.is_valid():
+            email = form.cleaned_data["email"].strip().lower()
+            masked_email = mask_email(email)
+
+            user = User.objects.filter(
+                email__iexact=email,
+                is_active=False,
+            ).first()
+
+            if user is not None:
+                email_sent = send_verification_email(request, user)
+
+                if not email_sent:
+                    logger.warning(
+                        "Verification email could not be resent to user ID %s",
+                        user.pk,
+                    )
+
+            logger.info(
+                "Verification resend requested for email=%s "
+                "inactive_user_exists=%s",
+                masked_email,
+                user is not None,
+            )
+
+            return redirect("accounts:verification_sent")
+
+    else:
+        form = VerificationEmailForm()
+
+    return render(
+        request,
+        "registration/request_verification.html",
+        {"form": form},
+    )
 
 
 @method_decorator(
